@@ -24,11 +24,20 @@ Také nazýván *trunking protokol*, nebo *dot1q tagging*.
 Jedná se o standardizovanou metodu, kterou podporují všechny switche s podporou *VLAN*.
 Vezme původní rámec a jeho hlavičku rozšíří o *4B* informace a přepočítá *FCS*. ^9cc932
 
-- Značka protokolu
-	- 0x8100
-- Priorita dle protokolu *802.1p* [^1]
-- Příznak, zda je *MAC* adresa v kanonickém tvaru
-- Vlastní číslo *VLAN*y
+|16b|3b|1b|12b|
+|:-:|:-:|:-:|:-:|
+|TPID|T|C|I|
+|TPCI|PCP|DEI|VID|
+
+- Tag Protocol Identifier (TPID)
+	- Označuje začátek dot1Q tagu, je na stejném místě jako EtherType
+	- `0x8100`
+- Tag Control Information (TCI)
+	- Priority Code Point (PCP)
+		- Určuje prioritu pro QoS
+	- Drop Eligible Indicator (DEI)
+		- Původně CFI pole, ale ve spojení s PCP může označovat framy, které lze zahodit v případě přetížení sítě
+	- VLAN Identifier (VID)
 
 
 ## dot1q-tunnel

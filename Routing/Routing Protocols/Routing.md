@@ -99,3 +99,6 @@ Jedná se o upravený typ [[Routing#Distance-Vector|Distance-Vector]]
 |**IPv6**|RIPng|IPv6 EIGRP|OSPFv3|Podporuje|mBGP|
 |**Sítě**|/|BMA, NBMA, Pt-Mpt|Pt-Pt, BM, NBMA, Pt-Mpt, Virtual link|/|/|
 
+
+
+

@@ -2,6 +2,7 @@
 ---
 STP komunikuje mezi switchi pro konverzi sítě na loop-free topologii.
 Z toho důvodu některé porty prostě vypne, jinými slovy, převede do *Blocking* stavu. Zbylé porty ve *Forwarding* stavu tvoří loop-free topologii.
+Počet maximálníx instancí je, dle platformy, omezen, například na platformách `2960`,`3560` a `3760` je maximální počet instancí 128.
 
 Ke komunikaci mezi switchi využívá [[STP Terminologie#BPDUs|BPDUs]]
 
@@ -127,7 +128,7 @@ Tyto chyby se řeší stejně jako Direct Link Failure, ale protože nedochází
 
 [[Rapid STP]]
 [[MSTP]]
-[[PVSTP]]
+[[Per-VLAN STPs]]
 
 
 
