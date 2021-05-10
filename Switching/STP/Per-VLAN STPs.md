@@ -43,4 +43,4 @@ PVSTP+ se chová k CST regionu jako k *loop-free* sdílenému segmentu.
 
 Přes který jsou přeposílány, ale nezpracovávány, díky rozdílné Multicast MAC adrese, PVSTP BPDUs, a tak se pro, přímo nespojené, PVSTP segmenty nic neděje a mohou utvořit *loop-free* topologii.
 
-VLAN 1 BPDUs jsou torchu speciální, jsou posílány jak [[STP]], tak i pomocí [[Per-VLAN STPs|PVSTP]], ale protože v CST regionu se zpracovává pouze [[STP]] [[STP Terminologie#Configuration BPDU 0x00|BPDU]], tak PVSTP slouží pouze k detekci [[Terminologie#Native VLAN|native VLAN]] missmatche.
+VLAN 1 BPDUs jsou trochu speciální, jsou posílány jak [[STP]], tak i pomocí [[Per-VLAN STPs|PVSTP]], ale protože v CST regionu se zpracovává pouze [[STP]] [[STP Terminologie#Configuration BPDU 0x00|BPDU]], tak PVSTP slouží pouze k detekci [[Terminologie#Native VLAN|native VLAN]] missmatche.

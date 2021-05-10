@@ -46,6 +46,20 @@ SW(config)# vtp password <Heslo> hidden   \\ Nastavení hesla, uložení v encry
 SW(config)# do vtp primary   \\ Pro přepnutí na Primary server
 ```
 
+### MST
+
+```
+SW(config)#vtp mode server mst     \\ Zapně sdílení nastavení MST regionu
+```
+
+```
+SW(config)#do vtp primary mst     \\ Zapně sdílení nastavení MST regionu
+```
+
+```
+SW(config)#vtp mode client mst     \\ Zapně přijímání nastavení MST regionu
+```
+
 ## Informace
 
 ```

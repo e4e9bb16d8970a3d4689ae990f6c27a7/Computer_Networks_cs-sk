@@ -52,16 +52,23 @@
 	- Zařízení v síti se pomocí Router Solicitation snaží najít router
 	- Posílají požadavek na `FF02∷2`, což je adresa všech routerů
 	
-- Router Advertisement
-	- Router ohlašuje svou přítomnost, spolu s informacemi o síti
+- Router Advertisement ^RA
+	- Router ohlašuje svou přítomnost, spolu s informacemi o síti 
 	- Adresa sítě, MTU
-	- Pro dynamické nastavení obsahuje RA 2 pole
-		- M
+	- Pro dynamické nastavení obsahuje RA 4 hlavní pole
+		- M ^mflag
 			- 0 - V síti není DHCPv6
 			- 1 - V síti je DHCPv6 a klient by ho měl využít
-		- O
+			- Pokud je nastaven O flag, tak je tato hodnota 0 a ignoruje se
+		- A ^aflag
+			- 0 - Zařízení se má obrátit na DHCPv6 server
+			- 1 - IPv6 adresu si má zařízení vygenerovat samo
+		- O ^oflag
 			- 0 - V síti není DHCPv6
 			- 1 - V síti je DHCPv6 a klient by ho měl využít pro ostatní nastavení (DNS, doména…)
+		- L ^lflag
+			- 0 - Pro komunikaci s jinými zařízeními v síti je nutné použít router
+			- 1 - Všechny adresy s tímto prefixem jsou dosažitelmé po L2
 			
 - Neighbour Solicitation
 	- Náhrada za ARP, získávání L2 adresy

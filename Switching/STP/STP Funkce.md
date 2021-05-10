@@ -79,7 +79,7 @@ SW(config)#errdisable recovery interval <interval>
 V případě *Unidirectional link failure* může dojít k tomu, že máme konektivitu přes [[STP Terminologie#Root|RP]], ale nedostáváme Superior [[STP Terminologie#Configuration BPDU 0x00|BPDUs]], tato funkce zabraňuje [[STP Terminologie#Root|RP]], aby se stal [[STP Terminologie#Designated|Designated]] , což by se po uplynutí [[STP Terminologie#Max Age|Max Age]] timeru stalo.
 Loop Guard je přepne do [[#ErrDisabled]] stavu, dokud znovu nedostane [[STP Terminologie#Configuration BPDU 0x00|BPDU]]. Port v takovém stavu je považován za *P2p LOOP_Inc*, což lze ověřit příkazem `SW#show spanning-tree inconsistentports`.
 
-Tato funkce se používá v případě, že máme nespolehlivou optickou linku, o které víme, že by mohlo dojít k dočasnému vypadnutí spoje na [[STP Terminologie#Root|RP]], pro zamezení změny celé topologie lze použít tut funkci.
+Tato funkce se používá v případě, že máme nespolehlivou optickou linku, o které víme, že by mohlo dojít k dočasnému vypadnutí spoje na [[STP Terminologie#Root|RP]], pro zamezení změny celé topologie lze použít tuto funkci.
 
 Je nutné s ní ale zacházet opatrně, protože zároveň zamezuje možnosti konvergence sítě v případě, že se nejedná o dočasnoý výpadek, ale komplexní chybu sítě.
 
@@ -89,7 +89,7 @@ Je nutné s ní ale zacházet opatrně, protože zároveň zamezuje možnosti ko
 Princip, respektive důvod, této funkcionality je stejný, jako u STP Loop Guard, pro případ *Unidirectional link failure* se snaží předejím vytvoření smyčky.
 Oproti Loop Guardu tím ale předchází tak, že všechny porty, i [[STP Terminologie#Blocking|Blocking]], posílají své [[STP Terminologie#Configuration BPDU 0x00|BPDUs]] a v případě, že protistrana nedostane toto[[STP Terminologie#Configuration BPDU 0x00|BPDU]], přepne port do *P2p LOOP_Inc* [[STP Terminologie#Blocking|Blocking]] stavu, dokud mu nepříjde.
 
-Tato funkce je pouze pro [[MST]] a [[Per-VLAN STPs|RPVST+]].
+Tato funkce je pouze pro [[MSTP]] a [[Per-VLAN STPs|RPVST+]].
 
 Rozdíl s Loop Guardem je v tom, že jednat posílá [[STP Terminologie#Configuration BPDU 0x00|BPDUs]], ale hlavně Loop Guard nemůže být nastaven na [[STP Terminologie#Designated|Designated]] porty, kdežto Bridge Assurance funguje pro celou síť.
 
@@ -112,11 +112,11 @@ BackboneFast pomáhá zkrátit [[STP Terminologie#Max Age|Max Age]] timer na 0 d
 
 Switch, který ztratí [[STP Terminologie#Root|RP]] a nemá náhradní konektivitu začne sám sebe považovat za Root Bridge a začne posílat jeho vlastní [[STP Terminologie#Configuration BPDU 0x00|BPDUs]], které přicházejí i na zablokovaný port sousedního switche, ty jsou ovšem inferiorní, a tak na ně není brán zřetel a čeká se na vypršení [[STP Terminologie#Max Age|Max Age]] timeru pro přepnutí portu do [[STP Terminologie#Designated|Designated]] stavu a přeposílání jeho [[STP Terminologie#Configuration BPDU 0x00|BPDUs]].
 
-S funkcionalitou BackboneFast v případě, že vedlejší switch dostane toto inferiorní [[STP Terminologie#Configuration BPDU 0x00|BPDU]] pošle ze všech non-designated portů *Root Link Query Protocol Data Unit ([[#RLQ]])* Request, který má za úkol získat odpověd, jedná se o podobný mechanismus, jako ping, pokud Root Bridge přijme tento Request, odpoví na něj pomocí *RLQ Response*, pokud na non-designated port příjde Response se stejným [[STP Terminologie#Root Bridge ID RBID||RBID]], jako jeho [[STP Terminologie#Root Bridge ID RBID||RBID]], pak je na tomto portu funkční konektivita, pokud příjde jiný, pork okamžitě odblokuje.
+S funkcionalitou BackboneFast v případě, že vedlejší switch dostane toto inferiorní [[STP Terminologie#Configuration BPDU 0x00|BPDU]] pošle ze všech non-designated portů *Root Link Query Protocol Data Unit ([[#RLQ]])* Request, který má za úkol získat odpověd, jedná se o podobný mechanismus, jako ping, pokud Root Bridge přijme tento Request, odpoví na něj pomocí *RLQ Response*, pokud na non-designated port příjde Response se stejným [[STP Terminologie#Root Bridge ID RBID|RBID]], jako jeho [[STP Terminologie#Root Bridge ID RBID|RBID]], pak je na tomto portu funkční konektivita, pokud příjde jiný, pork okamžitě odblokuje.
 
 #### RLQ
 
-Jedná se o standartní STP [STP Terminologie#Configuration BPDU 0x00|BPDU]] s tím, že v [[LLC]] [[LLC#SNAP|SNAP]] hlavičce obsahuje speciální, Cisco, adresu.
+Jedná se o standartní STP [[STP Terminologie#Configuration BPDU 0x00|BPDU]] s tím, že v [[LLC]] [[LLC#SNAP|SNAP]] hlavičce obsahuje speciální, Cisco, adresu.
 
 ### Schéma
 

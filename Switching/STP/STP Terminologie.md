@@ -214,6 +214,14 @@ SW1(config)#spanning-tree extended system-id
 ``` 
 Starší switche s většim pamětním prostorem pro MAC adresy umožnují tento příkaz vypnout, ale většina novějších už ne.
 
+#### MST
+
+U MSTP se Bridge ID skládá z:
+
+- 4b - **System Priority**, Násobek 4096, defaultně 32 768 
+- 12b - **System ID Extension** - Číslo Instance
+- 6B - **System ID**, MAC adresa, stálá hodnota určená jako tiebreaker
+
 ### Root Bridge ID (RBID) 
 
 Jedná se o [[#Bridge ID]] zvoleného Root Bridge.

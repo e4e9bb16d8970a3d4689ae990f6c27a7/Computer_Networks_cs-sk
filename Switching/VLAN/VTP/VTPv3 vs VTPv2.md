@@ -26,7 +26,7 @@
 	- Primary server může jako jediný upravovat VLAN databázi, stejně jako u VTPv2, ale u VTPv3 i pokud se switch v jiném módu odpojí z instance VTP nemůže svou databázi upravit 
 		
 - Více možností
-	- VTPv3 může synchronizovat nastavení více funkcí, než jenom VLAN, napříkald i MST region
+	- VTPv3 může synchronizovat nastavení více funkcí, než jenom VLAN, napříkald i [[MSTP]].
 
 ## Další
 
