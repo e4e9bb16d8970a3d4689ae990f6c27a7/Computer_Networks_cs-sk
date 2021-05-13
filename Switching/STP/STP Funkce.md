@@ -62,7 +62,7 @@ BPDU Filter má přednost před BPDU Guard.
 V případě nastavení BPDU Filteru globálně, ne per-port, funkcionalota se trochu změní.
 
 1. V případě příjmutí [[STP Terminologie#Configuration BPDU 0x00|BPDU]] port ho nezahodí, ale naopak vypne funkcionalitu Portfast a BPDU Filteru a začne fungovat jako normální port
-2. Po nastavení rozešle z příslušných portů 10 - 12 [[STP Terminologie#Configuration BPDU 0x00|BPDUs]]s a čeká na odpověď, následně postupuje dle bodu 1.
+2. Po nastavení rozešle z příslušných portů 10 - 12 [[STP Terminologie#Configuration BPDU 0x00|BPDUs]] a čeká na odpověď, následně postupuje dle bodu 1.
 
 ## ErrDisabled
 
@@ -91,12 +91,16 @@ Oproti Loop Guardu tím ale předchází tak, že všechny porty, i [[STP Termin
 
 Tato funkce je pouze pro [[MSTP]] a [[Per-VLAN STPs|RPVST+]].
 
-Rozdíl s Loop Guardem je v tom, že jednat posílá [[STP Terminologie#Configuration BPDU 0x00|BPDUs]], ale hlavně Loop Guard nemůže být nastaven na [[STP Terminologie#Designated|Designated]] porty, kdežto Bridge Assurance funguje pro celou síť.
+Rozdíl s Loop Guardem je v tom, že jednak posílá [[STP Terminologie#Configuration BPDU 0x00|BPDUs]], ale hlavně Loop Guard nemůže být nastaven na [[STP Terminologie#Designated|Designated]] porty, kdežto Bridge Assurance funguje pro celou síť.
 
 ```
 SW(config)#spanning-tree bridge assurance
 SW(config-if)#spanning-tree portfast network
 ```
+
+## Dispute
+
+Jedná se o stav, při kterém v [[Rapid STP#RSTP Synchronization Process|RSTP Synchronization Process]], pokud posíláme superioriní BPDU, ale nedostáváme odpověď s příjmutím, znamená to, že sousední switch nedostal naše superiorní BPDU, a tak je up-link nedostupný. 
 
 ## UplinkFast
 ---
@@ -112,7 +116,8 @@ BackboneFast pomáhá zkrátit [[STP Terminologie#Max Age|Max Age]] timer na 0 d
 
 Switch, který ztratí [[STP Terminologie#Root|RP]] a nemá náhradní konektivitu začne sám sebe považovat za Root Bridge a začne posílat jeho vlastní [[STP Terminologie#Configuration BPDU 0x00|BPDUs]], které přicházejí i na zablokovaný port sousedního switche, ty jsou ovšem inferiorní, a tak na ně není brán zřetel a čeká se na vypršení [[STP Terminologie#Max Age|Max Age]] timeru pro přepnutí portu do [[STP Terminologie#Designated|Designated]] stavu a přeposílání jeho [[STP Terminologie#Configuration BPDU 0x00|BPDUs]].
 
-S funkcionalitou BackboneFast v případě, že vedlejší switch dostane toto inferiorní [[STP Terminologie#Configuration BPDU 0x00|BPDU]] pošle ze všech non-designated portů *Root Link Query Protocol Data Unit ([[#RLQ]])* Request, který má za úkol získat odpověd, jedná se o podobný mechanismus, jako ping, pokud Root Bridge přijme tento Request, odpoví na něj pomocí *RLQ Response*, pokud na non-designated port příjde Response se stejným [[STP Terminologie#Root Bridge ID RBID|RBID]], jako jeho [[STP Terminologie#Root Bridge ID RBID|RBID]], pak je na tomto portu funkční konektivita, pokud příjde jiný, pork okamžitě odblokuje.
+S funkcionalitou BackboneFast v případě, že vedlejší switch dostane toto inferiorní [[STP Terminologie#Configuration BPDU 0x00|BPDU]] pošle ze všech non-designated portů, tedy i RP, *Root Link Query Protocol Data Unit ([[#RLQ]])* Request, který má za úkol získat odpověd, jedná se o podobný mechanismus jako ping, pokud Root Bridge přijme tento Request, odpoví na něj pomocí *RLQ Response*, pokud na non-designated port příjde Response se stejným [[STP Terminologie#Root Bridge ID RBID|RBID]], jako jeho [[STP Terminologie#Root Bridge ID RBID|RBID]], pak je na tomto portu funkční konektivita, pokud příjde jiný, port okamžitě odblokuje.
+Po přijetí Response na všech portech, které poslaly request, se odblokuje i původní port, na který přišlo první inferiorní BPDU.
 
 #### RLQ
 

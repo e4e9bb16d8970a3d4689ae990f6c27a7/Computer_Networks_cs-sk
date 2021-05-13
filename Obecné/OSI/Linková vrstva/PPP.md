@@ -90,7 +90,7 @@ Vyjednává o možnostech PPP spojení.
 ### Multilink
 
 Umožňuje spojit rychlosti více sériových linek.
-Oproti [[Port-Chanel|Port-Chanelu]], který využívá *load-balancing*, PPP Multilink doslova spojuje sériová spojení v jedno, každý frame, poslaný tímto spojen je totiž fragmentován a každá linka přenese stejnou část framu.
+Oproti [[EtherChannel]], který využívá *load-balancing*, PPP Multilink doslova spojuje sériová spojení v jedno, každý frame, poslaný tímto spojen je totiž fragmentován a každá linka přenese stejnou část framu.
 
 ```
 R1(config-if)#encapsulation ppp \\ Nastavení encapsulace
