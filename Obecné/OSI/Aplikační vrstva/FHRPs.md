@@ -55,7 +55,7 @@ Umožňuje maximálne 16 instancí.
 ### Stavy
 
 |Stav|Popis|
-|::|:-:|
+|:-:|:-:|
 |Initial|HSRP zatím neběží|
 |Learn|Očekává Hello z active zařízení, nezná virtuální adresy, nedostal autentizační paket|
 |Listen|Zná virtuální adresy, ale není active ani standby, očekává hello pakety od těchto zařízení|
