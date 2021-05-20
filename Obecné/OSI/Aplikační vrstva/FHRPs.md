@@ -44,7 +44,7 @@ Umožňuje maximálne 16 instancí.
 
 ### HSRPv1 vs HSRPv2
 
-|Oblast|HSRPv1||HSRPv2|
+|Oblast|HSRPv1|HSRPv2|
 |:-:|:-:|:-:|
 |Timers|Nepodporuje milisekundové intervaly|Podporuje milisekundové intervaly|
 |Group Range|0-255|0-4095|
