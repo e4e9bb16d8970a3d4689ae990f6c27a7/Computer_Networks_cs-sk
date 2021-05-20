@@ -112,7 +112,7 @@ R1(config-if)#standby <GROUP> mac-address <MAC>     \\ Manuální nastavení VMA
 
 Jedná se o standartizovanou verzi HSRP a tudíš ji podporují i non-Cisco výrobci, základní funkcionalita je shodná, ale pár drobností je změněných.
 
-|Věc|VRRP|HSRP|
+|Věc|HSRP|VRRP|
 |:-:|:-:|:-:|
 |Počet instancí|16|255|
 |Active/Standby|1 Active, 1 Standby, ostatní kandidáti|1 Master, ostatní backup|
