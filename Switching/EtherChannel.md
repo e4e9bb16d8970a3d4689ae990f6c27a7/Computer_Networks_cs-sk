@@ -9,7 +9,7 @@ V případě vypadnutí některé z linek EtherChannel jako takový nadále fung
 
 ## Load Sharing Algorithm
 
-Vzhledem k tomu, že oproti [[PPP#Multilink|Multilinku]] nerozkládá framy na jednotlivé části pro každou linku nebo oproti blokovaným linkám per-vlan ve [[STP]] využívá algoritmus pro rozesílání komunikace mezi fyzické spoj e, jedná se o *load-sharing* a ne *load-balancing*. 
+Vzhledem k tomu, že oproti [[PPP#Multilink|Multilinku]] nerozkládá framy na jednotlivé části pro každou linku nebo oproti blokovaným linkám per-vlan ve [[STP]] využívá algoritmus pro rozesílání komunikace mezi fyzické spoje, jedná se o *load-sharing* a ne *load-balancing*. 
 
 Switch vytvoří hash na základě informací L2, L3, L4 vrstev, nejčastěji na základě [[MAC]] adres, který poté přiřadí jednomu z portů v EtherChanelu, v případě, že se hash sestavuje nad více informacemi, například zdrojové a cílové [[MAC]] adrese, pak se nad těmito poly provede XOR operace nad jejímž výsledkem se vypočítá hash.
 Pro jedno koncové zařízení se tedy nejedná o zvýšení rychlosti, pokud máme EtherChanel sestaven z 6x `1Gb/s` linek, výsledná maximální propustnost bude stále pouze `1 Gb/s`, ale už se o něj nebude muset dělit s 6 dalšímy zařízeními.

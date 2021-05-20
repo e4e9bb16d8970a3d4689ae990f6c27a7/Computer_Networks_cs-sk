@@ -16,6 +16,16 @@ SW1(config-vlan)#shutdown     \\ Vypnutí VLAN
 SW1(config)#no vlan <Číslo>     \\ Smazání VLAN
 ```
 
+### Přiřazení portu do VLANy
+
+```
+SW1(config)#interface <IF>     \\ Přepnutí se na interface
+SW1(config-if)#switchport mode access     \\ Přepnutí do módu koncového portu
+SW1(config-if)#switchport access vlan <VLAN_ID>     \\ Přiřazení do VLANy
+```
+
+U Cisco switchů braných jako *Access* není nutn manuálně určovat `switchport mode access`, protože porty jsou defaultně v [[DTP#Módy| DTP módu]] auto, a tím pádem *Access*, ale zůstává tam zapnutý protokol [[DTP]], což je bezpečnostní problém, manuální nastavení `switchport mode access` vypne [[DTP]] na portu.
+
 ### Database
 
 Na starších zařízeních je možné nastavit VLAN pomocí databáze.
