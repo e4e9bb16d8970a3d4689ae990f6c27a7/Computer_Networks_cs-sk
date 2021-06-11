@@ -7,7 +7,7 @@ Jedním z nich je konfigurace, kdy je do portu připojen Cisco telefon (který o
 Na portu nastavíme access *VLAN*, do ní spadá komunikace *PC*, a také voice *VLAN* (někde označována jako auxiliary *VLAN* - má i více použití), do které se zařadí komunikace telefonu.
 Aby vše fungovalo jak má, tak musíme použít *Cisco IP telefon* a na portu musí být povoleno *CDP*.
 Ve skutečnosti vše funguje tak, že se na portu nastaví trunk, access *VLAN* se stane native *VLAN* (tedy netagovaná) a komunikace telefonu použije *802.1q*.
-
+V případě nastavení Voice VLANy, switch automaticky nastaví port jako [[STP Funkce#STP Portfast|PortFast]].
 ## Konfigurace
 
 ```

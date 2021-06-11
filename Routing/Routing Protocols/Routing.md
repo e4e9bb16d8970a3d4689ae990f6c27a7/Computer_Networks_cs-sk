@@ -56,11 +56,8 @@ Routovací protokoli jsou tomu uspůsobeny
 - Routery udržují RIB s informací o vektoru, vzdálenosti, do dané sítě
 - Periodicky posílají svou tabulku sousedům, ti si ji upraví a pošlou dále
 - Jednoduché, nevytváří vztahy  ([[RIP]])
-- Problémem jsou routovací smyčky, to řeší
-	- TTL
-	- Split Horizon - Neposílání tabulky na rozhraní, ze které přišlo
-	- Hold-down timer - Čekací interval, než je síť stabilní, prodlužuje konvergenci
-
+- Problémem jsou routovací smyčky, to řeší jednotlivé mechanizmy protokolů
+	- I přes tyto mechanizmy nelze 100% zaručit bezsmyčkovou topologii, krom [[EIGRP]]
 - [[RIP]]
 - [[EIGRP]]
 - [[IGRP]]
@@ -68,12 +65,15 @@ Routovací protokoli jsou tomu uspůsobeny
 ### Link-State
 
 - Routery udržují komplexní mapu topologie vytvořenou pomocí LSA
+	- Místo posílání připojených sítí, ze kterých příjemce vyhodnotí odesílatele jako next-hop, link-state protokoly posílají objekty s atributy
+	- Nejčastější atribut je router, který má atributy v podobě interfaců a připojených sítí, díky tomu se může vypočítat mnohem komplexnější a kvalitnější topologie
+	- Objekty ale mohou být i celé AS, mlutiaccess sítě nebo border routery
+	- Router, respektive zástupce objektu, pak tyto informace přeposílá	
 - Vyměňují si Link State Advertisements - LSA, ta jsou vyvolána nějakou událostí v síti, také Link State Packet - LSP nebo Link State PDU
 - Sousedům zasílá Hello packet, ve kterém zasílá informace o sobě
 - Rychle reaguje na změnu topologie, ale spotřebovává hodně propustnosti, zejména ze začátku, a zdrojů routeru
 - Metrika je komplexně vypočítána pomocí Dijikstrova algoritmu, shortest path first - SFP
 - Pro zlepšení vlastností se rozdělují sítě na menší oblasti, hraniční routery posílají sumarizaci sítě, využívají multicast a čísluje LSA
-
 - [[OSPF]]
 - [[IS-IS]]
 
@@ -83,7 +83,8 @@ Používá se mezi AS (Autonomní systém).
 
 ### Path-Vector
 
-Jedná se o upravený typ [[Routing#Distance-Vector|Distance-Vector]]
+Jedná se o upravený typ [[Routing#Distance-Vector|Distance-Vector]], do jeho logiky přidává navíc další informace o cestě (*path elements*), například u [[BGP]] číslo AS.
+Hlavní účel těchto path elements je předcházení smyčce, router nepřidá cestu, která již sdílí stejné údaje o cestě.
 
 # Srovnání protokolů
 

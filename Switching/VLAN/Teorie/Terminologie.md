@@ -1,7 +1,11 @@
 [[VLAN]] [[Trunk]]
 # Pojmy
 
+## Access
 
+Jedná se o stav portu, ve kterém je port přiřazen pouze jedná VLANě.
+Komunikace je na tomto portu netagovaná, protože se nejčastěji jedná o koncový port k PC.
+Veškerá příchozí komunikace automaticky spadá pod přiřazenou VLANu.
 
 ## Trunk
 

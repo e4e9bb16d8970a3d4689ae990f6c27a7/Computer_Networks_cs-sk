@@ -4,7 +4,7 @@
 ## Root Guard
 ---
 
-Tato funkce se zapíná per-port a zamezuje portu přepnout se do RP role, pokud dostane superiorní [[STP Terminologie#Configuration BPDU 0x00|BPDU]], přepne se do [[#ErrDisabled]] stavu.
+Tato funkce se zapíná per-port a zamezuje portu přepnout se do RP role, pokud dostane superiorní [[STP Terminologie#Configuration BPDU 0x00|BPDU]], přepne se do *\*ROOT_Inc* Blocking stavu.
 
 
 ```
@@ -93,6 +93,8 @@ Tato funkce je pouze pro [[MSTP]] a [[Per-VLAN STPs|RPVST+]].
 
 Rozdíl s Loop Guardem je v tom, že jednak posílá [[STP Terminologie#Configuration BPDU 0x00|BPDUs]], ale hlavně Loop Guard nemůže být nastaven na [[STP Terminologie#Designated|Designated]] porty, kdežto Bridge Assurance funguje pro celou síť.
 
+Defaultní nastavení se liší, většinou je ale zapnuté na *Network* type portech.
+
 ```
 SW(config)#spanning-tree bridge assurance
 SW(config-if)#spanning-tree portfast network
@@ -100,7 +102,7 @@ SW(config-if)#spanning-tree portfast network
 
 ## Dispute
 
-Jedná se o stav, při kterém v [[Rapid STP#RSTP Synchronization Process|RSTP Synchronization Process]], pokud posíláme superioriní BPDU, ale nedostáváme odpověď s příjmutím, znamená to, že sousední switch nedostal naše superiorní BPDU, a tak je up-link nedostupný. 
+Jedná se o stav, při kterém v [[Rapid STP#RSTP Synchronization Process|RSTP Synchronization Process]], pokud posíláme superioriní BPDU, ale nedostáváme odpověď s příjmutím, protější switch nám sále posílá inferior BPDUs, znamená to, že sousední switch nedostal naše superiorní BPDU, a tak je up-link nedostupný. 
 
 ## UplinkFast
 ---

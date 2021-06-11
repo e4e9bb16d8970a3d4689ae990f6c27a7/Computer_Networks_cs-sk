@@ -58,6 +58,7 @@ SW1(config-if)#ip address <IP> <Mask>     \\ Přiřadí IP adresu
 ```
 
 Tento routovaný port se používá pro další směrování ze sítě, například na další router.
+Jeho přesné fungování je přesněji popsáno v [[MLS#Routed Port|Router Port]].
 
 ## pVLAN SVI
 

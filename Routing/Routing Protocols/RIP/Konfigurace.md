@@ -60,6 +60,9 @@ Všechny následné informace se nastavují Interface-based.
 # Autentizace
 ---
 
+Defaultně se používá plain-text autentizace.
+V případě více platných klíčů IOS vybere klíč s nejnižším číslem.
+
 ```
 R1(config)#key chain <Jméno>     \\ Vytvoření Key Chainu
 R1(config-keychain)# key <Číslo>     \\ Vytvoření klíče

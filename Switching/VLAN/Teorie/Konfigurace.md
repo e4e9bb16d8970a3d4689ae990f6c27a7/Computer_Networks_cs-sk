@@ -54,7 +54,7 @@ SW1(config-vlan)#private-vlan <primary|isolated|community>     \\ Určení funkc
 ```
 ```
 SW1(config)#vlan <Číslo>     \\ Přepnutí do VLANy, kterou jsme označili jako Primary
-SW1(config-vlan)#private-vlan association <Číslo>|<add|remove>     \\ Přiřazení pVLAN do Primary VLANy
+SW1(config-vlan)#private-vlan association <<Číslo>|<add|remove>     \\ Přiřazení pVLAN do Primary VLANy
 ```
 ```
 SW1(config)#interface <IF>     \\ Přepnutí na Interface
@@ -127,3 +127,20 @@ R(config-subif)#encapsulation <dot1q|ISL> <VLAN_ID> {native}    \\ Přiřazení 
 ```
 
 ## pVLAN Trunk
+
+pVLAN Trunk se používá v případě, že potřebujeme připojit switch, který neumí pracovat s [[Private VLAN]].
+Pak můžeme nastavit Trunk tak, aby všechen provoz spadal do určité Secondary VLANy.
+
+### Promiscuous
+
+Toto nastavení jednoduše vezme *Secondary VLAN Tag*, který provoz má a nahradí ho tagem *Primary* VLANy, takže veškerá komunikace za tímto Trunkem bude Promiscuous.
+Toto nastavení se hodí například pro [[#ROAS]], který nezná secondary VLANy.
+
+
+
+### Isolated
+
+Toto nastavení nahrazuje *Primary VLAN Tag* tagem určení *Secondary* VLANy, v praxi však tato secondary VLANa musí být Isolated.
+
+
+

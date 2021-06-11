@@ -6,7 +6,7 @@
 
 Funkce Private VLAN pomáhá šetřit spotřebu VLAN.
 Například pokud potřebujeme oddělit jednotlivé zařízení od L2 nefiltrované komunikace, pomocí normálních VLAN bychom museli použít speciální VLAN pro každé zařízení, v případě použití konceptu Isolated VLAN nám stačí 1.
-Další výhodou je, že Secondary VLAN sdílí jednu síť, Primary VLAN síť.
+Další výhodou je, že Secondary VLAN sdílí jednu síť, Primary VLAN síť a to i s L3 adresací.
 
 ## Funkce
 
@@ -45,7 +45,7 @@ Nastavuje se v rámci VLAN.
 
 ## Port Blocking
 
-Za normálních okolností switch rozešle unknown-unicast na všechny porty, krom příchozího, to může bát bezpečnostní hrozba a Cisco to umožňuje blokovat.
+Za normálních okolností switch rozešle unknown-unicast na všechny porty, krom příchozího, to může být bezpečnostní hrozba a Cisco to umožňuje blokovat.
 
 [[Switching/VLAN/Teorie/Konfigurace#pVLAN|Private VLAN]]
 [[Switching/VLAN/Teorie/Konfigurace#pVLAN Trunk|Private VLAN Trunk]]

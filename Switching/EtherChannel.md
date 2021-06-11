@@ -7,9 +7,7 @@ Po vytvoření se jevý pro protokoly typu [[STP]], ale i normální provoz jako
 Lze ho vytvořit až z 8 linek, tato hodnota je vybrána z důvodu toho, že Ethernetové ryhlosti jsou většinou v násobcách deseti, pokud bychom tedy potřebovaly rychlost větší, než `8 Gb/s`, je výhodnější použít `10 Gb/s` spoj.
 V případě vypadnutí některé z linek EtherChannel jako takový nadále funguje, ale ztratil jednu linky a tím i její rychlost, což se projevý ve výsledné propustnosti, ale i ceně linky v [[STP]].
 
-## Load Sharing Algorithm
-
-Vzhledem k tomu, že oproti [[PPP#Multilink|Multilinku]] nerozkládá framy na jednotlivé části pro každou linku nebo oproti blokovaným linkám per-vlan ve [[STP]] využívá algoritmus pro rozesílání komunikace mezi fyzické spoje, jedná se o *load-sharing* a ne *load-balancing*. 
+## Load-Balancing Algorithm
 
 Switch vytvoří hash na základě informací L2, L3, L4 vrstev, nejčastěji na základě [[MAC]] adres, který poté přiřadí jednomu z portů v EtherChanelu, v případě, že se hash sestavuje nad více informacemi, například zdrojové a cílové [[MAC]] adrese, pak se nad těmito poly provede XOR operace nad jejímž výsledkem se vypočítá hash.
 Pro jedno koncové zařízení se tedy nejedná o zvýšení rychlosti, pokud máme EtherChanel sestaven z 6x `1Gb/s` linek, výsledná maximální propustnost bude stále pouze `1 Gb/s`, ale už se o něj nebude muset dělit s 6 dalšímy zařízeními.
@@ -29,6 +27,10 @@ Na mnoha platformách hashovací funkce vrací 3-bitový výsledek od 0 do 7, č
 |1|8|
 
 Na jiných Cisco platformách se hodnota rozšiřuje ze 3-bitové na 8-bitovou, což umožňuje 256 hodnot a zajišťuje tak mnohem spravedlivější load-sharing vzhledem k tomu, že v takovém případě se 1 = 0.390625%.
+
+```
+SW(config)#port-channel load-balance <TYPE>     \\ Nastavení na základě čeho se má load-balancovat
+```
 
 ## Nastavení
 ---
@@ -141,3 +143,10 @@ Manuální vytvoří Port-channel pouze na základě informací na lokálním sw
 ```
 SW(config-if-range)#channel-group <1-255> mode on     \\ Vytvoření Port-channelu
 ```
+
+## L3
+
+Pro vytvoření L3 Port-Channelu je nutné nastavit všechny jeho porty ještě před vytvořením jako routed.
+Dle [[MLS#Routed Port]] každý port v port-channelu má vlastní interní VLANu a samotný port-channel ná další.
+
+Vzhledem k tomu, že se jedná o L3 Port-Channel, load-balancing algoritmus by měl být změněn na L3 adresy. 

@@ -75,6 +75,7 @@ Na Cisco Catalyst switchích je defaultní non-edge port.
 - Indikuje mismatch mezi switchi, typicky Access port s Trunkem
 ### Shared
 - Jedná se o připojení k Hubu, musí používat half-duplex
+- V případě Rapid STP nebude používat Synchronization Process, ale Timery
 
 ## Stavy
 ---
