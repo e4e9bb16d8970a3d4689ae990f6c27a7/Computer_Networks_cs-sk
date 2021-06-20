@@ -118,7 +118,7 @@ SW(config-if)#lacp port-priority <PR>
 
 ##### PAgP
 
-Cisco proptietární protokol, který posílá frmay na MAC adresu `0100:0CCC:CCCC`.
+Cisco proptietární protokol, který posílá framy na MAC adresu `0100:0CCC:CCCC`.
 Podporuje maximálne 8 portů.
 
 - Auto

@@ -26,7 +26,7 @@ R1#show track     \\ Zobrazení nastavení
 ---
 
 Jedná se o cisco proprietární protokol, který vytváří virtuální IP a MAC adresu mezi členy HSRP skupiny. Jednotlivý členové musí mít L3 konektivitu.
-Jedno zařízení jedná jako **active**, to se stará o zpracovávání provozu, a ostatní jako **standby**, které vyčkávají na selhání aktivního prvku.
+Jedno zařízení jedná jako **active**, to se stará o zpracovávání provozu, další je  **standby**, které vyčkává na selhání aktivního prvku a zbytek je ve stavu **listen**, které čekají na nahrazení standby zařízení.
 **active** L3 zařízení rozesílá multicastové UDP-based Hello packety na port `1985` každé 3s (Hello timer) a při nedostání po 10s (Hold Timer) se přepne do **active** režimu L3 zařízení s nejvyšší prioritou, v případě, že je priorita defaultní (100), pak se rozhoduje na základě nejnižší IP adresy v daném subnetu.
 V případě, že není nastavené *preemption*, pak po znovu naběhnutí primárního L3 zařízení se stav **active** nevrátí, ale zůstává u stávajícího zařízení.
 
@@ -94,7 +94,7 @@ R1(config-if)#standby <GROUP> authentication md5 key-string <PASSWD>
 ##### [[#Object Tracking]]
 
 ```
-R1(config-if)#standby <GROUP> track <TR_NUMBER> {decrement <0 - 255> | shutdown}     \\ Spojení s Object-trackingem
+R1(config-if)#standby <GROUP> track <TR_NUMBER> {decrement <0 - 255> | shutdown}     \\ Spojení s Object-trackingem, bez udání hodnoty sníží prioritu o 10
 ```
 
 ##### Další
@@ -118,9 +118,10 @@ Jedná se o standartizovanou verzi HSRP a tudíš ji podporují i non-Cisco výr
 |Active/Standby|1 Active, 1 Standby, ostatní kandidáti|1 Master, ostatní backup|
 |VIP|Musí se lišit od reálně|Může být shodná s reálnou|
 |Multicast address|224.0.0.2(.102)|224.0.0.18|
-|Časovače|1s,10s|1s,3s|
+|Časovače|3s,10s|1s,3s|
 |Autentizace|Ano|Ne v RFC, Cisco ji podporuje|
 |Preemptivita|Defaultně vypnuto|Defaultně zapnuto|
+|Superiorita|Vyšší priorita, nižší IP|Vyšší priorita, vyšší IP|
 
 ### VRRPv2 vs VRRPv3
 
@@ -213,7 +214,7 @@ Cisco umožňuje konfigurovat až 1024 skupin na interface a do každé 4 zaří
 |Standby|Pouze jeden interface, další v pořadí na Active, po vypršení Hold timeru se přepne na Active|
 |Active|Zařízení má aktivní roly AVG|
 
-Preemption je defaultně vypnuté, pouze pro přepnutí do Active role, u přepnutí mezi rolemi Standby a Listen se systém chová, jako by byla zapnutá a záleží i na IP adresách, konfigurace se pouze stahuje na Active stav.
+Preemption je defaultně vypnuté, pouze pro přepnutí do Active role, u přepnutí mezi rolemi Standby a Listen se systém chová, jako by byla zapnutá a záleží i na IP adresách, konfigurace se pouze vztahuje na Active stav.
 Při nastavení Preemption lze nastavit delay, který počká po určitý čas, než předá roli, zabraňuje to rychlému přeskakování rolí.
 Stejně jako u VRRP se do Preemption počítá pouze priorita.
 

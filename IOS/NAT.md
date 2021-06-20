@@ -3,14 +3,42 @@
 
 Z důvodu nedostatku IPv4 veřejných adres se rozšířil NAT, který na výstupním prvku sítě překládá Local IPv4 adresy na Public IPv4 adresy a umožňuje tak komunikaci po Internetu.
 
+Máme 4 typy adres, které se skládají z:
+
+## Location
+---
+Udává stranu NATu, na které se adresa nachází.
+
+### Inside
+
+Jedná se o vnitřní síť.
+
+### Outside
+
+Jedná se o vnější síť.
+
+## Perspective
+---
+Udává směr, ze kterého je na adresu nahlíženo, před nebo za NATem.
+
+### Local
+
+Pohled na adresu je z lokální sítě, před přeložením.
+
+### Global
+
+Pohled na adresu je z vnější sítě, po přeložení.
+
+Zjednodušeně:
+
 - Inside Local
-  - Lokální adresa uvnitř organizace
+  - Lokální adresa uvnitř organizace (ze které se překládá)
 - Inside Global
-  - Veřejná adresa uvnitř organizace
+  - Veřejná adresa uvnitř organizace (na kterou se překládá)
 - Outside Local
-  - Lokální adresa jiné organizace, nespadající pod naší kontrolu
+  - Jak uvnitř uvidíme příchozí adresu
 - Outside Global
-  - Lokální adresa jiné organizace, nespadající pod naší kontrolu
+  - Jak vypadá zvnějšku příchozí adresa
 
 ## Static NAT
 
@@ -31,7 +59,7 @@ R(config-if)#ip nat inside     \\ Nastavení interfacu s Inside Local konektivit
 
 *IP masquerading*
 
-Tento NAT definuje ACL pomocí kterého přiřadí měně Inside Global adres více Inside Local adresám, v praxi klidně celou síť jedné veřejné adrese.
+Tento NAT definuje ACL pomocí kterého přiřadí méně Inside Global adres více Inside Local adresám, v praxi klidně celou síť jedné veřejné adrese.
 
 ```
 R(config)#access-list <NUMBER> permit <IP> <RMASK>     \\ Určení sítě/í

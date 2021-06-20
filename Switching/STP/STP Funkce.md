@@ -83,6 +83,15 @@ Tato funkce se používá v případě, že máme nespolehlivou optickou linku, 
 
 Je nutné s ní ale zacházet opatrně, protože zároveň zamezuje možnosti konvergence sítě v případě, že se nejedná o dočasnoý výpadek, ale komplexní chybu sítě.
 
+## EtherChannel Guard
+---
+
+Také nazýván *misconfiguration guard*.
+Při použití manuálního nastavení [[EtherChannel]], může se stát, že dojde k rozdílu v rychlostech nebo typu (access, trunk) linek, pokud by byl použit protokol jako [[EtherChannel#LACP|LACP]], nebo [[EtherChannel#PAgP|PAgP]], problém by byl automaticky opraven, nebo by se portchannel vůbec nezapl.
+V případě použití manuálního zapnutí se portchannel interface zapne, ale nemusí fungovat na obou stranách a může vzniknout smyčka.
+
+EtherChannel misconfiguration guard ji dokáže zdetekova a obvykle během 40s po nahození interfacu ho přepnout do error-disabled stavu.
+
 ## Bridge Assurance
 ---
 

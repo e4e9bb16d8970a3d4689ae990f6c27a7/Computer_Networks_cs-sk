@@ -131,9 +131,9 @@ Mezi těmito sessionami pak load-sharuje.
 
 Jedná se o defaultní a doporučené nastavení.
 
-V případě potřeby lze do výpočtu hashe, který označuje session, započítat i jiné informace, například L4 porty, z různých důvodů, nejčastěji například z důvodu NATu.
+V případě potřeby lze do výpočtu hashe, který označuje session, započítat i jiné informace, například L4 porty, z různých důvodů, nejčastěji například z důvodu [[NAT]].
 
-Algoritmy se mohou lišit dle platformy, často MLS s Hardware CEF nepodporují změni, zatímco Software-based CEF ISR routery ano.
+Algoritmy se mohou lišit dle platformy, často MLS s Hardware CEF nepodporují změny, zatímco Software-based CEF ISR routery ano.
 
 Realný load-sharing se provádí tak, že mezi FIB a Adjacency Table je vložena nová tabulka, *load-share table*, která obsahuje až 16 pointerů odkazujících na Adjacency Table, tyto pointery jsou přesně rozdělené v poměru *route cost* , což znamená například, že pokud máme 3 cesty se stejnou metrikou, pak se bude rozdělovat 15 pointerů a každá cesta jich dostane 5, pokud budou 2 cesty, každá z nich dostane 8 pointerů.
 Mezi těmito pointery pak přeskakují jednotlivé hashe.

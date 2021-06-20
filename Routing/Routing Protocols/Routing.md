@@ -46,6 +46,129 @@ Pokud stále je více cest do jedné sítě, router použije typ load-balancingu
 
 # Dělení protokolů
 ---
+
+## Static
+
+Jedná se o přesné, manuální, určení next-hopu pro určitou síť.
+Manuálně musíme určit cesty do všech sítí, což i v malé síti může být problém, proto se upřednostňují dynamické protokoly a statické cesty jsou používány pouze v nějkterých případěch, napříkla jako náhradní cesta nebo defaultní cesta.
+
+```
+R(config)#ip route <NET> <MASK> <NEXT-HOP | INTERFACE> {AD}
+```
+
+### Directly Attached Static
+
+Při použití *Point-to-point* (P2P) seriového spoje není potřeba pro [[CEF#Adjacency Table]] zjišťovat MAC adresu a jako výchozí cesta se může použít přímo interface.
+
+Z hlediska forwardovací logiky se pak tato cesta bude chovat stejně, jako přímo připojená síť, díky čemuž se zjednodušuje forwardovací proces.
+
+```
+R1(config)i#p route 10.0.0.4 255.255.255.252 10.0.0.2
+```
+
+```R
+R1(config)#do show ip cef
+Prefix               Next Hop             Interface
+0.0.0.0/0            no route
+0.0.0.0/8            drop
+0.0.0.0/32           receive              
+10.0.0.0/30          attached             Serial1/0
+10.0.0.0/32          receive              Serial1/0
+10.0.0.1/32          receive              Serial1/0
+10.0.0.2/32          10.0.0.2             Serial1/0
+10.0.0.3/32          receive              Serial1/0
+10.0.0.4/30          10.0.0.2             Serial1/0
+127.0.0.0/8          drop
+224.0.0.0/4          drop
+224.0.0.0/24         receive              
+240.0.0.0/4          drop
+255.255.255.255/32   receive  
+
+R1(config)#do show ip route
+
+      10.0.0.0/8 is variably subnetted, 3 subnets, 2 masks
+C        10.0.0.0/30 is directly connected, Serial1/0
+L        10.0.0.1/32 is directly connected, Serial1/0
+S        10.0.0.4/30 [1/0] via 10.0.0.2
+```
+
+```
+R1(config)i#p route 10.0.0.4 255.255.255.252 s1/0
+```
+
+```R
+R1(config)#do show ip cef                              
+Prefix               Next Hop             Interface
+0.0.0.0/0            no route
+0.0.0.0/8            drop
+0.0.0.0/32           receive              
+10.0.0.0/30          attached             Serial1/0
+10.0.0.0/32          receive              Serial1/0
+10.0.0.1/32          receive              Serial1/0
+10.0.0.3/32          receive              Serial1/0
+10.0.0.4/30          attached             Serial1/0
+127.0.0.0/8          drop
+224.0.0.0/4          drop
+224.0.0.0/24         receive              
+240.0.0.0/4          drop
+255.255.255.255/32   receive 
+
+R1(config)#do show ip route
+
+      10.0.0.0/8 is variably subnetted, 3 subnets, 2 masks
+C        10.0.0.0/30 is directly connected, Serial1/0
+L        10.0.0.1/32 is directly connected, Serial1/0
+S        10.0.0.4/30 is directly connected, Serial1/0
+```
+
+### Recursive Static
+
+Jedná se o cestu, při které je nutné vícenásobně prohledávat RIB pro určení všech informací, typicky po prvním prohledání najdeme IP next-hop, ale poté ještě musíme znovu prohledat RIB pro egress interface.
+
+```
+R1(config)#ip route 10.0.0.4 255.255.255.252 10.0.0.2
+```
+
+```R
+R1(config)#do show ip route
+
+      10.0.0.0/8 is variably subnetted, 3 subnets, 2 masks
+C        10.0.0.0/30 is directly connected, Serial1/0
+L        10.0.0.1/32 is directly connected, Serial1/0
+S        10.0.0.4/30 [1/0] via 10.0.0.2
+```
+
+### Fully Specified Static
+
+V případě specifikování výstupního interfacu se usnadní prohledávání RIB.
+
+```
+R1(config)#ip route 10.0.0.4 255.255.255.252 s1/0 10.0.0.2
+```
+
+```R
+R1(config)#do show ip route
+
+      10.0.0.0/8 is variably subnetted, 3 subnets, 2 masks
+C        10.0.0.0/30 is directly connected, Serial1/0
+L        10.0.0.1/32 is directly connected, Serial1/0
+S        10.0.0.4/30 [1/0] via 10.0.0.2, Serial1/0
+```
+
+Ovšem ve většině případů se používá [[CEF]], takže tento proces je lehce poupraven a ve výsledku se nejedná o značnou optimalizaci.
+
+### Floating Static
+
+Jedná se o jedno z nejčastějších použití statických cest, manuálně nastavené cestě se zvýší AD nad dynamický protokol a díky tomu bude fungovat jako záloha v případě selhání.
+
+### Static Null
+
+V případě potřeby mazání provozu z určité sítě je možné vytvořit statickou cestu, která bude mířit na `null` interface, což je univerzální logický interface, který maže data bez nutnosti zatěžování CPU, je tedy rychlejší oproti například [[ACL]].
+
+```
+R1(config)#ip route 10.0.0.4 255.255.255.252 null0
+```
+
 ## IGP - Interior Gateway Protocol
 
 Jedná se o routing uvnitř AS (Autonomního systému), souboru sítí.
@@ -99,6 +222,20 @@ Hlavní účel těchto path elements je předcházení smyčce, router nepřidá
 |**Tabulky**|RIB|RIB, Topology, Neighbour|RIB, Topology, Neighbour, LSA|LSA|Atributy, Topology|
 |**IPv6**|RIPng|IPv6 EIGRP|OSPFv3|Podporuje|mBGP|
 |**Sítě**|/|BMA, NBMA, Pt-Mpt|Pt-Pt, BM, NBMA, Pt-Mpt, Virtual link|/|/|
+
+
+# Load-Balancing
+---
+
+## Equal-Cost Multipathing
+
+*ECMP*
+
+V případě, že protokol podporující ECMP ([[OSPF]], [[RIP]], [[IS-IS]], [[EIGRP]]) dostane více stejných cest do jedné sétě, nainstaluje je všechny do RIB a router mezi nimi load-sharuje na základě [[CEF#Load-Sharing]].
+
+## Unequal-Cost Load Balancing
+
+Tato funkce umožňuje nakonfigurovat protokol, zatím pouze [[EIGRP]], aby přidal i, z hlediska metriky, nerovné cesty do RIB a load-balancoval s nimi na základě poměru jejich metriky.
 
 
 

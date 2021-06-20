@@ -1,7 +1,7 @@
 # Proxy ARP
 ---
 
-V případě špatně nakonfigurované masky, z jakéhokoli důvodu, například dle defaultního *classfull* dělení, se může stát, že například na koncovém zařízení máme masku `/8`, ale reálná síť, tedy maska na routeru je `/24`. V takovém případě nebude fungovat ARP z například `10.1.0.10` na `10.1.0.5`, protože koncové zařízení si myslí, že obě zařízení jsou na shodné síti, a tedy může použít ARP, ve skutečnosti nejsou na jedné *broadcast* doméně, a tak ARP nebude fungovat.
+V případě špatně nakonfigurované masky, z jakéhokoli důvodu, například dle defaultního *classfull* dělení, se může stát, že například na koncovém zařízení máme masku `/8`, ale reálná síť, tedy maska na routeru je `/24`. V takovém případě nebude fungovat ARP z například `10.1.0.10` na `10.10.0.5`, protože koncové zařízení si myslí, že obě zařízení jsou na shodné síti, a tedy může použít ARP, ve skutečnosti nejsou na jedné *broadcast* doméně, a tak ARP nebude fungovat.
 
 ARP Proxy tento problém řeší tak, že router tento ARP Request přijme a přepošle ho do příslušné sítě, v případě, že se mu vrátí odpověď, pošle koncovému zařízení ARP Reply s vlastní MAC adresou.
 

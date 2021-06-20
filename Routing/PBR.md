@@ -73,7 +73,7 @@ Nejprve je potřeba vytvořit [[ACL]], dle které se filtruje provoz, na který 
 Následně je potřeba nastavit samotné PBR, a to pod názvem route-map.
 
 ```
-R(config)#route-map <NAME>     \\ Přepnutí se na route-map
+R(config)#route-map <NAME> <NUMBER>     \\ Přepnutí se na záznam v route-map
 R(config-route-map)#match <ip <ACL>>     \\ Nastavení podmínky, která se má sledovat
 ```
 
@@ -84,6 +84,13 @@ R(config-route-map)#set <ip next-hop <IP>>     \\ Nastavení next-hop adresy
 ```
 
 Opět, `set` příkaz se dá použít mnoha způsoby, nejčastěji next-hop adresou.
+
+Pokud vytvoříme příkaz `set` bez podmínky `match`, bude se aplikovat na veškerý provoz.
+
+```
+R(config)#interface <IF>     \\ Přepnutí na vstupní interface
+R(config-if)#ip policy route-map <NAME>     \\ Spojení interfacu a PBR pravidel
+```
 
 #### Default
 
@@ -104,3 +111,20 @@ Tento proces může často selhat z několika důvodů:
 
 [[RARP, PARP, BOOTP#Proxy ARP|Proxy ARP]] v tomto případě nepomůže, protože router kontroluje, zda IP adresa, ze které ARP Response přišlo je dosažitelná interfacem, na který přišlo.
 Tato chybová hláška je pak označená jako *wrong cable* v `debug arp`.
+
+#### Selhání
+
+V případě nastavení, například next-hop, může dojít k vypadnutí této next-hop adresy a tedy i cesty.
+V takovém případě bude po krátkou dobu i nadále provoz posílán na tuto adresu, bude tedy zahazován a po určité době se pravidlo začne ignorovat a provoz se bude posílat pomocí normální logiky.
+
+Tato doba může být až desítky sekund, lze ji zkrátit pomocí verifikace funkčnosti:
+
+```
+R(config-route-map)#set ip next-hop <IP> verify-availability     \\ V tomto případě používá CDP
+```
+
+```
+R(config-route-map)#set ip next-hop verify-availability <IP> <next-hop_list> <track>
+```
+
+V tomto případě lze propojit příkaz s trackovaným objektem a například ho navázat na [[IP SLA]].

@@ -84,7 +84,7 @@ Je shodný s Root Bridgem IST (MSTI0) a musí se jednat o boundary switch, tedy 
 
 Vzhledem k tomu, že CST mezi regiony hledí na jednotlivé regiony jako na loop-free switche, musí si i určit [[STP Terminologie#Porty#Role|porty]].
 Určování funguje jako u klasického [[Rapid STP|RSTP]] s tím, že funguje pouze s boundary porty jednotlivých regionů.
-Jediná změna je ta, že [[STP Terminologie#Role|RP]] si určí CIST Regional Root, ostatní porty jsou [[STP Terminologie#Role|Designated]], [[STP Terminologie#Role|Alternate]] nebo [[STP Terminologie#Role|Backup]].
+Jediná změna je ta, že [[STP Terminologie#Role|RP]] si určí CIST Regional Root, ostatní porty jsou [[STP Terminologie#Role|Designated]], [[STP Terminologie#Role|Alternate]] nebo [[STP Terminologie#Role|Backup]] a to i v případě, že máme více boundary switchů.
 
 ## BPDU
 ---
@@ -184,7 +184,7 @@ Určuje [[STP Terminologie#Flag#RSTP|Flag]] pro [[MSTP#MSTIs|MSTI]].
 
 #### Priority
 
-Určuje [[STP Terminologie#Root Bridge ID RBID|RBID]] uvnitř MST instance.
+Určuje prioritu RB uvnitř MST instance.
 
 #### MSTID
 
@@ -192,7 +192,8 @@ Určuje číslo instance.
 
 #### Regional Root
 
-Jedná se o [[STP Terminologie#Root Bridge ID RBID|RBID]] RB uvnitř instance.
+Jedná se o MAC adresu RB uvnitř instance.
+Spolu s Priority a MSTID vytváří RBID.
 
 #### Internal Root Path Cost
 
