@@ -235,7 +235,7 @@ V případě, že protokol podporující ECMP ([[OSPF]], [[RIP]], [[IS-IS]], [[E
 
 ## Unequal-Cost Load Balancing
 
-Tato funkce umožňuje nakonfigurovat protokol, zatím pouze [[EIGRP]], aby přidal i, z hlediska metriky, nerovné cesty do RIB a load-balancoval s nimi na základě poměru jejich metriky.
+Tato funkce umožňuje nakonfigurovat protokol, zatím pouze [[Funkce EIGRP#Unequal-Cost Load Balancing|EIGRP]], aby přidal i, z hlediska metriky, nerovné cesty do RIB a load-balancoval s nimi na základě poměru jejich metriky.
 
 
 
