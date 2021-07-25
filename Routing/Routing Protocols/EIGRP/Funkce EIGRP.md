@@ -132,6 +132,7 @@ Nastavení Stub routeru pozměňuje řadu funkcí:
 	- Toto pravidlo má vyjímku, jedná se o [[#leak-map]]
 - Stub router pouze přeposílá vlastní připojené cesty na EIGRP-enabled interfacech 
 	- Toto lze opět specifikovat pomocí *summary*, *connected*, *static*, *redistributed*, *receive-only*
+	- Defaultně přeposílá přímo připojené a sumární cesty
 - Stub router nebude zahrnut do diffusing algoritmu, protože mu sousedé neposílají Query, pokud se ale nejedná o sdílené médium, v takovém případě se Query posílají a Stub router si s nimi musí poradit
 	- V případě, že na společném segmentu jsou ale i routery bez Stubu, buď se posílají Query unicestem, nebo se využívá funkce [[EIGRP#Reliable Transport Protocol RTP|RTP]] a CR flag.
 
@@ -169,19 +170,24 @@ Tato funkce umožňuje nastavit [[ACL]] a specifikovat,které sítě se nají sd
  Oproti [[RIP]] EIGRP podporuje *supernetting*, možnost sumarizovat na menší síť, než je classfull varianta.
  Také je možné nastavit na interface více, i překrývajících se, sumárních adres, EIGRP poté bude používat všechny ty, ke kterým má nějaký záznam v RIB.
  
- S každou sumární cestou instaluje EIGRP i *discard route* do RIB, ta se stará o to, že pokud máme cesty do síťí `10.15.10.0/24` a `10.0.5.0/24` a sumární cesta je `10.0.0.0/8` a příjde nám požadavek do sítě `10.1.0.0/0`, poté by se mohla využít defaultní cesta, protože my cestu do dané sítě nemáme, přeposlání na defaultní cestu by v tomto případě mohlo a s největší pravděpodobností vytvořilo smyčku. 
+ S každou sumární cestou instaluje EIGRP i *discard route* do RIB, ta se stará o to, že pokud máme cesty do sítí `10.15.10.0/24` a `10.0.5.0/24` a sumární cesta je `10.0.0.0/8` a příjde nám požadavek do sítě `10.1.0.0/24`, poté by se mohla využít defaultní cesta, protože my cestu do dané sítě nemáme, přeposlání na defaultní cestu by v tomto případě mohlo a s největší pravděpodobností vytvořilo smyčku. 
  Proto se instaluje i cesta se stejnou adresou a maskou, jako sumární, která má egress interface `Null0`, čili zahození.
- Discard route má AD 5, což může v některých případech být problém, například při sumární cestě `0.0.0.0/0` může tato discard routa nahradit naši defaultní cestu, v takovém případě je potřeba AD přenastavit [[EIGRP Konfigurace#Summarization]].
+ Discard route má AD 5, což může v některých případech být problém, například při sumární cestě `0.0.0.0/0` může tato discard routa nahradit naši defaultní cestu, v takovém případě je potřeba AD přenastavit [[EIGRP Konfigurace#Sumarizace]].
  V případě nastavení AD na 255 se u některých starších IOSů vypne instalace cesty do RIB, u novějších se ale i vypne přeposílání sumární cesty, nastavení tak nebude fungovat.
  
  Metrika přeposílaná v sumární cestě je nejnižší metrika ze všech jednotlivých cest, v případě, že sumární adresa spojuje stovky a tisíce síťí může ke změně metriky docházet poměrně často, v takovém případě sumární cesta naopak ztěžuje konvergenci sítě, a proto je možné nastavit metriku staticky.
+ 
+ ### Query
+ 
+ Sumarizace také rozbíjí Query doménu, každá sumarizovaná síť je vlastní doménou, což opět zvyšuje stabilitu a scalabilitu.
+ Toto je způsobeno jednoduše tím, že při dostání Query buď router má přesnou cestu, to jest v případě dotazování na cestu `10.0.0.0/24` a my máme přímo cestu `10.0.0.0/24`, pak můžeme poslat Reply, nebo nemáme přímo danou cestu, včetně sumarizovaní, máme například pouze `10.0.0.0/16`, tato cesta se nepočítá, a tak router odešle Reply s nekonečnou metrikou, zabraňujíc tak šíření Query dále v síti.
  
  ## Passive Interface
  ---
  
  Defaultně EIGRP začne rozesílat Hello pakety ze všech interfaců, které mají specifikované sítě, toto je nejenom zbytečně náročné na prostředky, protože do takových sítí spadají i například `Loopback` interfacy, ale i bezpečnostní riziko, protože ne vždy chceme z konkrétního interface sdílet routovací informace.
  
- Stejně, jako u [[RIP]], lze nastavit passive interface [[EIGRP Konfigurace#Passive Interface]].
+ Stejně, jako u [[RIP]], lze nastavit passive interface [[EIGRP Konfigurace#Základní konfigurace]].
  
  ## Graceful Shutdown
  ---
