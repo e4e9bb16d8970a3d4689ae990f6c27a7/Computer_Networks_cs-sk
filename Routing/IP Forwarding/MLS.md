@@ -3,7 +3,7 @@
 
 *MLS* je termín označující funkci switche, který je normálně pouze L2, která využívá i vyšší vrstvy ISO/OSI, nejčastěji L3.
 
-V případě L3 switchingu se jedná o [[VLAN]] interfacy (SVI), které poskytují L3 interface přístupný po [[Trunk|Truncích]] nebo portech v [[Terminologie#Access|Access]] módu.
+V případě L3 switchingu se jedná o [[VLAN]] interfacy (SVI), které poskytují L3 interface přístupný po [[Trunk|Truncích]] nebo portech v [[Switching/VLAN/Teorie/Terminologie#Access|Access]] módu.
 
 ## SVI
 

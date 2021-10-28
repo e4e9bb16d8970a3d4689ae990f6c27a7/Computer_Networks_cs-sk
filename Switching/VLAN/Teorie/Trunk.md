@@ -1,4 +1,4 @@
-[[VLAN]] [[Terminologie]]
+[[VLAN]] [[Switching/VLAN/Teorie/Terminologie]]
 # Popis
 ---
 Pro připojení jiného aktivního prvku, komunikace je tagována a přenáší se vybrané VLANy.

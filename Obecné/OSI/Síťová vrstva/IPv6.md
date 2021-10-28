@@ -1,25 +1,39 @@
 # Hlavička
 ---
 
-- Version
+- **Version**
 	- Verze IP protokolu
-- Traffic class
+- **Traffic class**
 	- Hodnota pro  [[QoS]]
-- Flow label
+- **Flow label**
 	- Identifikace paketu z toku dat
 	- Určeno pro zamezení předbíhání paketů
-- Payload lenght
+- **Payload lenght**
 	- Velikost segmentu
-- Next header
+- **Next header**
 	- Určuje typ L4 protokolu, nebo odkazuje na další IPv6 hlavičku
-- Hop limit 
+- **Hop limit** 
 	- TTL
-- Source address
+- **Source address**
 	- Zdrojová adresa
-- Destination address
+- **Destination address**
 	- Cílová adresa
 
- ![[IPv6hlavicka.png]]
+```packetdiag
+packetdiag {
+  colwidth = 32;
+  node_height = 288;
+
+  0-3: Version (4);
+  4-11: Traffic Class (8);
+  12-31: Flow Label (20);
+  32-47: Payload Lenght (16);
+  48-55: Next Header(8);
+  56-63: Hop Limit(8);
+  64-95: Source Address (128b);
+  96-127: Destination Address (128b);
+}
+```
  
  ## Extended header
  

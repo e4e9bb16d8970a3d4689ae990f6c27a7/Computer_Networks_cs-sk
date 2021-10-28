@@ -89,7 +89,7 @@ O změně sítě se může zařízení dozvědět několika způsoby:
 	- [[EIGRP Pakety#SIA-Query|SIA Query]]
 	- [[EIGRP Pakety#SIA-Reply|SIA Update]]
 - Změnou lokálních metrik
-- Vypadnutí spoje
+- Vypadnutím spoje
 
 Zároveň zde funguje mechanismus [[RIP#Route poisoning|Route Poisoning]], v případě, že vypadne Successor pro danou síť a neexistuje náhrada, jeho metrika je přeposílána s nekonečnou cenou ([[EIGRP Metrika#Delay]]).
 

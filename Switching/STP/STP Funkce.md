@@ -59,7 +59,7 @@ BPDU Filter má přednost před BPDU Guard.
 
 #### Global
 
-V případě nastavení BPDU Filteru globálně, ne per-port, funkcionalota se trochu změní.
+V případě nastavení BPDU Filteru globálně, ne per-port, funkcionalita se trochu změní
 
 1. V případě příjmutí [[STP Terminologie#Configuration BPDU 0x00|BPDU]] port ho nezahodí, ale naopak vypne funkcionalitu Portfast a BPDU Filteru a začne fungovat jako normální port
 2. Po nastavení rozešle z příslušných portů 10 - 12 [[STP Terminologie#Configuration BPDU 0x00|BPDUs]] a čeká na odpověď, následně postupuje dle bodu 1.

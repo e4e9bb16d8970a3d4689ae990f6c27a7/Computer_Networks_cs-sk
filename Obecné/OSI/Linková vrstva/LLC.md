@@ -1,5 +1,5 @@
 # LLC
-
+---
 ## Funkce
 
 -   **Multiplexing/De-Multiplexing Síťové vrstvy**
@@ -31,7 +31,7 @@
 		-   Je používán například u *Microsoft NetBIOS*
 	
 ## Hlavička
-	
+---
 ### Vlastnosti
 	
 Ve standardizaci [IEEE 802.2 Logical Link Control](https://en.wikipedia.org/wiki/IEEE_802.2) je použita i LLC hlavička.

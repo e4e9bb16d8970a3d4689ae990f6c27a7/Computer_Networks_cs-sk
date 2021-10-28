@@ -147,6 +147,6 @@ SW(config-if-range)#channel-group <1-255> mode on     \\ Vytvoření Port-channe
 ## L3
 
 Pro vytvoření L3 Port-Channelu je nutné nastavit všechny jeho porty ještě před vytvořením jako routed.
-Dle [[MLS#Routed Port]] každý port v port-channelu má vlastní interní VLANu a samotný port-channel ná další.
+Dle [[MLS#Routed Port]] každý port v port-channelu má vlastní interní VLANu a samotný port-channel má další.
 
 Vzhledem k tomu, že se jedná o L3 Port-Channel, load-balancing algoritmus by měl být změněn na L3 adresy. 

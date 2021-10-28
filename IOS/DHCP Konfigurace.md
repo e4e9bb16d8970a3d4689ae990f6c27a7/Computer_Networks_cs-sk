@@ -96,3 +96,28 @@ V případě, že DHCP Request musí jít přes L3, pak musíme nastavit Relay a
 R1(config)#interface <DefaultGateway_Interface>     \\ Výchozí brána sítě, pro VLAN SVI
 R1(config-int)#ipv6 dhcp relay destination <NextHop>
 ```
+
+# DHCP Snooping
+---
+
+```
+SW(config)#ip dhcp snooping     \\ Zapnutí funkce
+```
+
+```
+SW(config)#ip dhcp snooping vlan <VID>     \\ Specifikace VLAN
+```
+
+```
+SW(config-if)#ip dhcp snooping trust     \\ Určení trust portu
+```
+
+## IP Source Guard
+
+```
+SW(config)#ip dhcp snooping database flash:/<PATH>     \\ Určení bindign databáze
+```
+
+```
+SW(config-if)#ip verify source <port-security>     \\ Verifikace IP + <MAC>
+```

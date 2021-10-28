@@ -31,4 +31,4 @@ Framy se neposílají v případech
 - Port je manuálně nastaven do Trunk módu s příkazem `no negotiate`
 - Port je routed
 - Port má příkaz `no negotiate`
-- Port je v [[Terminologie#dot1q-tunnel|dot1q-tunnel]] módu
+- Port je v [[Switching/VLAN/Teorie/Terminologie#dot1q-tunnel|dot1q-tunnel]] módu

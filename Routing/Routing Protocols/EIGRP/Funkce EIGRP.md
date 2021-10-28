@@ -4,7 +4,7 @@
 ## Router ID
 ---
 
-RID je `4B` číslo označující router, defaultně má každá instance EIGRP vlastní, ale je povoleno použití stejného RID pro více instancí a procesů.
+RID je `32b` číslo označující router, defaultně má každá instance EIGRP vlastní, ale je povoleno použití stejného RID pro více instancí a procesů.
  Původně bylo používáno pro prevenci routing-loops u redistribuovaných cest, ke každé externí cestě bylo připojeno RID routeru, ze kterého byla redistribuována a pokud se připojené RID shodovalo s lokálním, router ji zahodil.
  
  V novějších verzích je ale RID připojeno i v interních cestách, se kterými funguje stejně.
@@ -100,7 +100,7 @@ Zde je vidět poměr, $4:67:80$, další 3 pakety půjdou na `10.0.0.2` poté da
 ## Add-Path Support
 ---
 
-V určitých topologiích, typicky [[DMVPN]], může vzniknout situace, ve které ma 2 a více *Spoke* routerů společnou síť, a tak *Hub* router, znaje všechny cesty, může provádět load-balancing, ale vzhledem k tomu, že cestu do určité sítě v EIGRP vždy router sdílí pouze jednu, a to tu na sebe, ostatní spoke routery tedy nevědí o více cestách do jedné sítě a nemohou tedy provádět load-balancing.
+V určitých topologiích, typicky [[DMVPN]], může vzniknout situace, ve které má 2 a více *Spoke* routerů společnou síť, a tak *Hub* router, znaje všechny cesty, může provádět load-balancing, ale vzhledem k tomu, že cestu do určité sítě v EIGRP vždy router sdílí pouze jednu, a to tu na sebe, ostatní spoke routery tedy nevědí o více cestách do jedné sítě a nemohou tedy provádět load-balancing.
 
 IOS `15.3(2)T` přidal do Named módu podporu *Add-Paths*, umožňující routeru sdílet více equal-cost cest do jedné sítě. Tuto funkci ale není možno využívat s UCLB a Variance tedy musí být nastaveno na 1 a zároveň musí být vypnuta funkce Split Horizon.
 
@@ -110,7 +110,7 @@ R_HUB(config-router)#address-family ipv4 unicast autonomous-system <AS>
 R_HUB(config-router)#af-interface <IF (Tunnel)>
 R_HUB(config-router-af-interface)#no split-horizon     \\ Vypnutí split horizon
 R_HUB(config-router-af-interface)#no next-hop-self {no-ecmp-mode}    \\ Vypne sdílení sebe jako next-hopu
-R_HUB(config-router-af-interface)#add-paths <NUMBER>     \\ Přenastaví macimální počet sdílených cest
+R_HUB(config-router-af-interface)#add-paths <NUMBER>     \\ Přenastaví maximální počet sdílených cest
 ```
 
 Při použítí více ISP, nebo spojů obecně, je nutné vzít v potaz další eventualitu. Hub se v takovém případě naučí o cestách z více, než jednoho, Tunnel interfacu. Například rovnocenné cesty přes `Tunnel1` $N_{11}, N_{12}$ a přes `Tunnel2` $N_{21},N_{22}$. 
@@ -140,7 +140,7 @@ Nastavení Stub routeru pozměňuje řadu funkcí:
 
 Vytváření Query v případě výpadku není nijak Stub funkcí pozměněno.
 
-V případě přijímání Quey záleží na síti, v případě, že se jedná o síť výše a níže uvedenými způsoby povolenou (*summary*, *connected*, *static*, *redistributed*, *receive-only*, *leak-map*), Query je zpracováno normálně a router se může i stát Successorem.
+V případě přijímání Query záleží na síti, v případě, že se jedná o síť výše a níže uvedenými způsoby povolenou (*summary*, *connected*, *static*, *redistributed*, *receive-only*, *leak-map*), Query je zpracováno normálně a router se může i stát Successorem.
 V případě, že se jedná o síť ne-specificky povolenou, router odpoví, i pokud ji zná, s *Infinite* metrikou, aby se nemohl stát Successorem.
 
 ### Funkce
@@ -158,11 +158,12 @@ Tato funkce umožňuje nastavit [[ACL]] a specifikovat,které sítě se nají sd
 
  Koncept vydávání více jednotlivých sítí za jednu společnou síť schovaje tak změny v jednotlivých sítích zjednodušuje routing a zlepšuje konvergenci i stabilitu sítě, na druhou stranu je potřeba pečlivě navrhnout síťovou topologii.
  
+  Historicky EIGRP podporuje 2 druhy sumarizace: automatickou a manuální.
+ 
  ### Automatická
  
- Historicky EIGRP podporuje 2 druhy sumarizace: automatickou a manuální.
  Automatická byla používaná v době *classfull* routingu, pokud chceme se zapnutou autosumarizací sdílet síť `10.15.215.0/24`, EIGRP ji bude propagovat jako `10.0.0.0/8`, protože se jedná o `Class A` síť. Tato sumarizace se neaplikuje na externí cesty, pokud není shodná síť i uvnitř sítě.
- EIGRP je ale classledd protokol a funkce autosumarizace byla zabudovaná pouze pro zpětnou kompatibilitu, respektive jednodušší přechod od classfull k classless routingu. Od verze IOS `10.0(1)M` je automaticky vypnutá.
+ EIGRP je ale classless protokol a funkce autosumarizace byla zabudovaná pouze pro zpětnou kompatibilitu, respektive jednodušší přechod od classfull k classless routingu. Od verze IOS `10.0(1)M` je automaticky vypnutá.
  
  ### Manuální
  
@@ -219,4 +220,36 @@ Protože EIGRP defaultně přeposílá pouze directly-connected sítě, tato ces
 
 [[EIGRP Konfigurace#Default Route]]
 
+## Fast Reroute (FRR)
+---
+
+V případě selhání sítě, pokud existují FS, dochází k ověřování jejich stavů, v případě zapnutého FRR se jeden z těchto FS označí za *Loop-Free Alternate* (LFA) a okamžitě, do 50 ms, se provoz přesměruje na něj, dokud se nevyřeší správný nástupce, provoz bude směřovat přes tuto záložní cestu.
+Tato funkce nijak neovlivňuje fungování DUAL, pouze po dobu jeho probíhání, respektive *Local Computation* nabízí náhradní cestu.
+
+Nefunguje pro [[IPv6]] a funguje pouze pro P-t-P linky a není podporována na všech cisco routerech.
+
+*LFA* se určují 2 způsoby:
+
+### Per-link
+
+
+Všechny sítě, které jsou dostupné z určitého interfacu mají shodnou next-hop adresu, je tedy možné určit záložní egress interface na základě normálního egress interfacu pro všechny sítě, které ho využívají.
+Výhoda je menší náročnost na systémové prostředky, ale nevýhoda je, že v případě vypadnutí linky všechen provoz se okamžitě přesměruje na jednu záložní linku, což může způsobit přetížení.
+
+### Per-prefix
+
+Záložní spoj je vybrán pro každou síť, náročnější na prostředky, ale efektivnější a průžnější load-balancing.
+
+Při více možných *LFA* musí EIGRP vybrat jednu záložní linku, nevybírá ji na základě metriky ale tie-braků:
+
+### Break-Tie
+
+1. Interface disjoint
+	- Nevybere LFA, které používá stejný egress interface, jako primární cesta.
+2. Line card disjoint
+	- Nevybere LFA, které používá stejný egress line card, jako primární cesta.
+3. Lower repair path metric
+	- Vybere LFAs s nejnižší metrikou.
+4. Shared Risk Link Group (SRLG)
+	- Jedná se o rozdělení do skupin, které jsou stejně náchylné na výpadek, například, pokud záložní interface směřuje k záložnímu routeru, který má stejný up-link, jako selhaný router, patří do stejné Risk skupiny.
 

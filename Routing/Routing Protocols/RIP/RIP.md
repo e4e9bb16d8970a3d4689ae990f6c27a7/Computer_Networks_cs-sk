@@ -1,6 +1,5 @@
-[[Routing]] [[Distance-Vector Routing Protocol]] [[Interior-Gateway Routing Protocol]]
-# Vlastnosti
-
+# RIP
+---
 Jedná se o jeden z nejjednodušších [[Routing]] , podporují ho i některé "levnější" zařízení, ovšem v dnešních sítích už nemá moc využití.
 Router dostane Paket s cestami do dalších sítí, tu implementuje a ze své aktualizované RIB následně sestaví nový Response paket, to je jeden z důvodů, proč konvergence trvá velmi dlouho.
 

@@ -3,7 +3,7 @@
 
 EIGRP pakety jsou přenášeny přímo na L3 pomocí protokolu 88, jejich velikost je odvozena od MTU linky, na klasické 1500 MTU lince se tedy jedná až o 1480 B.
 
-Každý paket obsahuje `20B` dlouhou hlavičku nasledovanou [[TLV]] poly se samotnými informacemi.
+Každý paket obsahuje `20B` dlouhou hlavičku nasledovanou [[TLV]] poli se samotnými informacemi.
 
 ![[EIGRP_Packet.png]]
 

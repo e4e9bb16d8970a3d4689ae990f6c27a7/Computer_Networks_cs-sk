@@ -27,7 +27,7 @@ Je nedoporučování přenastavovat ručně Bandwith z několika důvodů:
 2. Hodnota interfacu bandwith se používá i pro řadu dalších funkcí a může je tak negativně ovlivnit, například [[QoS]]
 3. EIGRP je omezeno pro uživání maximálně 50% bandwithu linky, jeho přenastavení, tedy snížení, nebo naopak zvýšení, může vést k narušení této logiky a nespolehlivosti přenosu
 
-Naopak, pokud chceme ovlivnit EIGRP selekci, je možné použív hodnotu Delay, které nebývá nikde jinde využívána a je kumulativní po celé lince, tudíš je vždy započítána.
+Naopak, pokud chceme ovlivnit EIGRP selekci, je možné použív hodnotu Delay, která nebývá nikde jinde využívána a je kumulativní po celé lince, tudíš je vždy započítána.
 
 ## Classic Metric
 ---
@@ -45,9 +45,9 @@ Jedná se o hodnotu zaznamenanou v mikrosekundách, nastavitelnou pomocí přík
 Bez manuálního nastavení IOS určí hodnotu na základě HW typu spoje (Ethernet, Serial, Sonet ...).
 
 EIGRP vždy počítá se sumou všech spoždění, které se po cestě nacházejí.
-EIGRP dokáže rozlišit delay od 1 do 167 772 14 desítek mikrosekund.
+EIGRP dokáže rozlišit delay od 1 do 167 777 214 desítek mikrosekund.
 
-Hodnota 16 777 215 je považována, podobně jako metrika 16 u [[RIP|RIPu]], za nedosažitelnou a je používána pro šíření nedostupné cesty pomocí [[RIP#Split Horizon with Poisoned Reverse|Split Horizon with Poisoned Reverse]] a [[RIP#Route poisoning|Route poisoning]]. 
+Hodnota 167 777 215 je považována, podobně jako metrika 16 u [[RIP|RIPu]], za nedosažitelnou a je používána pro šíření nedostupné cesty pomocí [[RIP#Split Horizon with Poisoned Reverse|Split Horizon with Poisoned Reverse]] a [[RIP#Route poisoning|Route poisoning]]. 
 
 ### Reliability
 
@@ -67,7 +67,7 @@ Pro vyvážení momentálních spiků v provozu IOS vypočítává exponenciáln
 
 EIGRP vždy počítá s maximální hodnotou po celé nabízené lince.
 
-Podobně jako u Reliability ani tady se nepřepočítává metika vždy při změně hodnoty, započítává se do ní pouze snapshot z doby vytváření metriky.
+Podobně jako u Reliability ani tady se nepřepočítává metrika vždy při změně hodnoty, započítává se do ní pouze snapshot z doby vytváření metriky.
 
 ### MTU
 

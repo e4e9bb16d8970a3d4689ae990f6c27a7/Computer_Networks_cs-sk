@@ -1,4 +1,4 @@
-[[Terminologie#dot1q-tunnel]]
+[[Switching/VLAN/Teorie/Terminologie#dot1q-tunnel]]
 # Q-in-Q Tunneling (802.1ad)
 
 Umožňuje přenášet *VLAN* tagy sítí *ISP*.

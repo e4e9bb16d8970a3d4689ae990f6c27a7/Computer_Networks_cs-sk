@@ -2,7 +2,7 @@
 ---
 STP komunikuje mezi switchi pro konverzi sítě na loop-free topologii.
 Z toho důvodu některé porty prostě vypne, jinými slovy, převede do *Blocking* stavu. Zbylé porty ve *Forwarding* stavu tvoří loop-free topologii.
-Počet maximálníx instancí je, dle platformy, omezen, například na platformách `2960`,`3560` a `3760` je maximální počet instancí 128.
+Počet maximálních instancí je, dle platformy, omezen, například na platformách `2960`,`3560` a `3760` je maximální počet instancí 128.
 
 Ke komunikaci mezi switchi využívá [[STP Terminologie#BPDUs|BPDUs]]
 
@@ -27,7 +27,7 @@ a následující proces.
 
 V STP může být pouze jeden switch Root Switch, k jeho zvolení se koná election, volba.
 
-Každý switch začíná STP instanci rozesíláním svých vlastních BPDUs, které označují jeho za Root Switch, pokud switch uslyší sueprior BPDU, přestane se prohlašovat za Root Switch a přestane posílat BPDUs. 
+Každý switch začíná STP instanci rozesíláním svých vlastních BPDUs, které označují jeho za Root Switch, pokud switch uslyší superior BPDU, přestane se prohlašovat za Root Switch a přestane posílat BPDUs. 
 Místo toho začne přeposílat superiorní BPDUs nového Root Switch kandidáta.
 
 Stejná volba se koná i poté, co nějaký switch přestane dostávat superior Root Bridge BPDUs, onen switch se opět začne považovat za Root Bridge.

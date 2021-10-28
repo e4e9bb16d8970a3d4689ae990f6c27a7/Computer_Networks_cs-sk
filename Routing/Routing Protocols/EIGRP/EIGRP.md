@@ -19,7 +19,7 @@ Pro vytvoření sousedství musí mit zařízení shodných několik hodnot:
 - K-Values
 - AS
 - Síť
-- Primární adresy pro EIGRP sousedství
+- RID
 
 Stojí za zmínku, že časovače nemusí být shodné.
 
@@ -114,7 +114,7 @@ Pakety, u kterých není potřeba spolehlivost, ([[EIGRP Pakety#Hello|Hello]] a 
 Při posílání paketů v multicastu je požadován ACK paket pro potvrzení příjmutí, pokud ho odesílatel nedostane od všech příjemců, nemůže pokračovat v posílání dalších paketů a nedojité pakety přepošle znovu, tentokrát jako unicast.
 Vzhledem k tomu, že odesílatel nemůže pokračovat v posílání dokud nedojde k plné ACK předešlých paketů, může dojít k vážnému zalagování sítě kvůli jednomu problematickému zařízení.
 RTP toto řeší pomocí *Conditional Recieve*, využívá [[EIGRP Pakety#Flags|Flag]], pomocí které dělí pakety na 2 skupiny, nadále odesílá unicast pakety zařízením, které neposlali ACK, a také posílá multicast informace s flagem říkajícím, aby onu zprávu přijímali pouze zařízení, které dostali všechny předešlé. 
-Toho je docíleno tak, že odesílající router pošle Hello paket se 2 specifickými [[EIGRP Pakety#TVL|TVL]] poli, Sequence TLV a Next Multicast TLV, nazývané taky jako Sequence Hello.
+Toho je docíleno tak, že odesílající router pošle Hello paket se 2 specifickými [[EIGRP Pakety#TVL|TVL]] poli, Sequence TLV a Next Multicast TLV, nazývané taky jako *Sequence Hello*.
 Next Multicast TLV obsahuje sekvenční číslo nadcházejícího multicast paketu a Sequence TLV obsahuje seznam všech nefunkčních zařízení, jejich IP adres.
 Pokud zařízení příjme tento Hello paket a nenajde se v Sequence TLV seznamu, přepne se do *Conditional Recieve* (CR) módu. Oproti tomu zařízení zmíněné v seznamu zůstane v klasickém stavu.
 Následně odešle router multicast paket s nastaveným `0x2` flagem (CR), tuto zprávu mohou příjmout pouze zařízení v CR módu.

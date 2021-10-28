@@ -347,3 +347,27 @@ R(config-router)#address-family <ipv4|ipv6> autonomous-system <AS>     \\ Přepn
 R(config-router-af)#topology base     \\ Přepnutí na nastavení topologie
 R(config-router-af-topology)#redistribute <RP> {route-map} metric <METRIKA>     \\ Nastavení redistribuce
 ```
+
+
+## FRR
+---
+
+```
+R(config-router-af)#topology base     \\ Přepnutí se na konfiguraci topologie
+R(config-router-af-topology)#fast-reroute per-prefix <all | route-map>     \\ Zapnutí funkce FRR
+```
+
+```
+R(config-router-af-topology)#fast-reroute tie-break <tie-break> <number>     \\ Lze nastavit tie-break a jejich pořadí
+```
+
+Jestliže primární cesta existuje jako ECMP, je tedy více cest, a je i více LFAs, defaultně jsou náhradní cesty distribuovány mezi všechny LFAs, aby se zachoval load sharing. 
+Pomocí konfigurace tie-breaků lze určit, která LFA se má použít, v takovém případě je nutné vypnout funkci load sharingu.
+
+```
+R(config-router-af-topology)#fast-reroute load-sharing disable     \\ Vypne load-sharing
+```
+
+```
+R#show ip eigrp topology frr
+```

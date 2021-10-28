@@ -11,6 +11,10 @@ IPv6 pakety jsou zapouzdřeny do GRE tunelu a poslány pomocí IPv4, na druhé s
 Jedním z problémů je nutnost vytvořit tunel s každým zařízením, pokud jich je v síti více.
 Proto je doporučeno používat tento tunel v případě přemostění ISP do nějaké výchozí brány, která se následně bude starat o směrování.
 
+## Výhody
+
+Pokud chceme použít nějaký *Dynamic Routing Protocol*, je nejjednodušší použít GRE tunel, například [[OSPFv3]] dokáže, narozdíl od 6to4, s tímto pracovat.
+
 ## Konfigurace
 
 ### R1
@@ -76,4 +80,13 @@ R2(config-if)#tunnel source <IF>
 R2(config-if)#ipv6 address <6to4_Adresa>
 R2(config-if)#tunnel mode ipv6ip 6to4     \\ Nastavení tunelu na 6to4 (překlad)
 R2(config)#ipv6 route <IPv6_Net/Prefix> tunnel <Číslo>     \\ Nutno nastavit routing
+```
+
+### General-Prefix
+
+Pokud se nám nechce ručně vypočítávat 6to4 IPv6 adresu, můžeme použít *General-Prefix*, který nám adresu sám přeloží.
+
+```
+R(config)#ipv6 general-prefix <NAME> 6to4 <IF>
+R(config-if)#ipv6 address <NAME> <IF_Adress>
 ```
