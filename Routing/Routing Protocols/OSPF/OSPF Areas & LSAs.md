@@ -1,9 +1,8 @@
 # OSPF Areas & LSAs
 ---
 
-## OSPF Areas Design
+## OSPF Areas Design 
 ---
-
 OSPF design z důvodů rychlejší konvergence a vyšší scaleability umožňuje rozdělit celou síť do několika Areí, které spolu navzájem komunikují za speciálních podmínek.
 Arei jsou číslované od `0` do `4294967295` nebo v IP formátu, speciální síť je `area 0`, také nazývaná ***Backbone***, jedná se o pomyslné jádro sítě, do kterého musí mít přístup všechny ostatní arei.
 Router, který propojuje jednotlivé arei, má tedy interface ve více, než jedné se nazývá ***Area Border Router*** (ABR), kdežto router pouze v jedné arei je ***Internal Router***, pokud je tato area Backbone, jedná se i o ***Backbone Router***. 
@@ -22,19 +21,63 @@ Používání různých areí, krom pouze jedné, přináší řadu výhod:
 - Selhání linky vyžaduje pouze částečné SPF výpočty v jiných areách
 - ABR jsou výborným bodem pro sumarizaci a filtrování
 
-## OSPF Path Selection
+## OSPF Path Selection 
 ---
-
 OSPF metrika se vypočítává jako:
 
 $$
 C=\frac{100Mb}{Bandwith}
 $$
+Cena se připočítává na výstupním interfacu.
 
 V některých případěch ale OSPF vybírá cestu nejenom na základě metriky:
 
 - OSPF vždy preferuje cestu do sítě, která vede uvnitř arei, i přes horší metriku
 - V případě externích cest OSPF preferuje E1/N1 cesty nad E2/N2
+- Následně se rozhoduje na základě Costu
+	- Pokud je Cost stejný, zabudují se obě
+		- Pokud se ale jedná o E2, tedy Cost ke určen dopředu, příchází do hry ještě *Forwarding Cost* ->
+
+> Specifický případ nastává u šíření E2 cest, u kterých je dopředu určen *Cost* a neměl by se tedy měnit. SPF ale stále potřebuje způsob, jak najít nejoptimálnější cestu, navíc, pokud by se metrika neměnila, tak by mohli existovat 10 - 100 možných cest do takovéhoto místa, proto u těchto cest OSPF má takzvannou *Forwarding Cost*, i přesto, že metrika cesty jako taková se u E2 cest nemění, SPF stále určuje cestu do dané sítě pomocí vzdálenosti mezi ním a routerem distribuujícím danou síť.
+
+> ```
+>*>  0.0.0.0/0, Ext2, cost 1, fwd cost 3, tag 1
+>     SPF Instance 28, age 00:00:00
+>     Flags: RIB
+>      via 10.26.27.2, GigabitEthernet0/0
+>      Flags: RIB
+>       LSA: 5/0.0.0.0/31.31.31.31
+>      via 10.26.29.2, GigabitEthernet0/1
+>       Flags: RIB
+>       LSA: 5/0.0.0.0/30.30.30.30
+>```
+
+> Zde je vidět, že metrika cesty *cost* zůstává stejný (1), ale přidává se hodnota *fwd cost*, která je na hodnotě 3, toto je cena cesty mezi lokálním routerem a routerem, který poslal daná LSA, v tomto případě 2 routery (`30.30.30.30` a `31.31.31.31`).
+> Pokud zvýšíme Cost jednoho z výstupních interfaců (`G0/0`), pak, kvůli zvýšené *fwd cost*, vypadne cesta z LRIB.
+
+> ```
+> *>  0.0.0.0/0, Ext2, cost 2, fwd cost 3, tag 1
+>     SPF Instance 29, age 00:00:00
+>     Flags: RIB
+>      via 10.26.29.2, GigabitEthernet0/1
+>       Flags: RIB
+>       LSA: 5/0.0.0.0/30.30.30.30
+>```
+
+> Pokud zvýšíme cenu i `G0/1`, pak se nám vrátí i druhá cesta, protože budou mít stejný *fwd cost*, a ten se zvýší.
+> (Aby se změnila topologie, je třeba přepočítat *SPF* příkazem (`clear ip ospf force-spf`))
+
+>```
+> *>  0.0.0.0/0, Ext2, cost 2, fwd cost 4, tag 1
+>     SPF Instance 31, age 00:00:02
+>     Flags: RIB
+>      via 10.26.27.2, GigabitEthernet0/0
+>       Flags: RIB
+>       LSA: 5/0.0.0.0/31.31.31.31
+>      via 10.26.29.2, GigabitEthernet0/1
+>       Flags: RIB
+>       LSA: 5/0.0.0.0/30.30.30.30
+>```
 
 Mezi areami se OSPF chová jako [[Routing#Distance-Vector|Distance-Vector]] protokol, OSPF nepoužívá tradiční loop-avoidance prvky, ale používá koncepty podobné, například [[RIP#Split Horizon|Split Horizon (RIP)]].
 
@@ -45,7 +88,6 @@ Dalším opatřením je, že ABR nikdy nepoužije jako cestu do sítě vně arei
 
 ## LSAs
 ---
-
 Různé typy paketů, respektive původů LSA informací, napomáhají multi-area designu OSPF.
 Pouze router, který je původcem určité LSA zprávy ji může upravit nebo smazat, příjemci ji mohou pouze zpracovat a přeposlat všem ostatním, nikdy ji nemohou upravovat, jedinou vyjímkou je vypršení životnosti zprávy.
 Toto pravidlo sice umožňuje všem zařízením uvnitř arei mít shodné LSDB, ale velmi limituje použití sumarizace a filtrovacích technik, jelikož většina routerů pouze přeposílá zprávy.

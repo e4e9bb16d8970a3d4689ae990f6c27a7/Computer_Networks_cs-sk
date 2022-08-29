@@ -21,4 +21,4 @@ Tento typ zápisu dat používá řada protokolů, například:
 
 [[EIGRP]]
 [[CDP]], [[LLDP]]
-[[IS-IS]]
+[[Routing/Routing Protocols/IS-IS/IS-IS]]

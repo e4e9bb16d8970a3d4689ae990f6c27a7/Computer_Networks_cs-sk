@@ -68,7 +68,7 @@ Nejedná se pouze o next-hop adresu, ale i [[QoS]], [[BGP]] nebo odchozí interf
 
 Nejprve je potřeba vytvořit [[ACL]], dle které se filtruje provoz, na který mají být pravidla použita.
 
-### route-map
+### [[Route-Map|route-map]]
 
 Následně je potřeba nastavit samotné PBR, a to pod názvem route-map.
 

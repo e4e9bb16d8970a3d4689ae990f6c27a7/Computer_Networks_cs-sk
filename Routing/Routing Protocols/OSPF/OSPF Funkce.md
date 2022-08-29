@@ -65,7 +65,7 @@ Normálně při každé změně topologie router provádí kompletně novou SPF 
 
 ### OSPFv2 Prefix Suppresison
 
-LSDB obsahuje imformace o všech sítích v OSPF doméně, ve většině případů se jedná o tranzitní sítě, tedy sítě mezi routery, typicky `/30` nebo `/31`, bez koncových hostů, přitom finálním důvodem pro OSPF, a protokoly obecně, je zajištění konektivity pro koncové zařízení, tato funkce umožňuje tyto sítě přestat přeposílat a ulevit tak výpočetním a paměťovým prostředkům všech routerů v síti.
+LSDB obsahuje informace o všech sítích v OSPF doméně, ve většině případů se jedná o tranzitní sítě, tedy sítě mezi routery, typicky `/30` nebo `/31`, bez koncových hostů, přitom finálním důvodem pro OSPF, a protokoly obecně, je zajištění konektivity pro koncové zařízení, tato funkce umožňuje tyto sítě přestat přeposílat a ulevit tak výpočetním a paměťovým prostředkům všech routerů v síti.
 
 Přesný postup je popsán v [RFC6860](https://datatracker.ietf.org/doc/html/rfc6860).
 

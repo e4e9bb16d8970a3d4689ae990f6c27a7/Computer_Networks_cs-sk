@@ -18,7 +18,7 @@
 |External BGP|20|
 |[[EIGRP]]|90|
 |IGRP|100|
-|[[IS-IS]]|115|
+|[[Routing/Routing Protocols/IS-IS/IS-IS]]|115|
 |[[OSPF]]|110|
 |[[RIP]]|120|
 |EGP|140|
@@ -35,6 +35,8 @@
 # Postup
 ---
 
+## Zjednodušeně
+
 - Přesnost
 	- Jako první faktor pro zapsání cesty do RIB je délka prefixu
 - AD
@@ -43,6 +45,37 @@
 	- Každý protokol má svou metriku
 	- V případě, že i v rámci routovacího protokolu jsou stejné cesty, vybírá se dle nejnižší metriky
 Pokud stále je více cest do jedné sítě, router použije typ load-balancingu
+
+## Reálně
+
+1. Cesta je naučena pomocí routing protokolu
+2. Routing protokol na základě vlastnosti cesty rozhodne, kterou zapsat do LRIB (*Local RIB*)
+	1. U většiny protokolů hraje roli i typ cesty
+		- | Protokol |             Pořadí             |
+	     | :--------: | :------------------------------: |
+	     | RIP        | Není specifické pořadí           |
+	     | EIGRP      | Internal, External               |
+	     | OSPF       | Intra-area, Inter-area, E1, E2   |
+	     | IS-IS      | L1, L2, External                 |
+	2. Poté rozhodne na základě metriky
+		- U [[BGP]] je proces ještě o něco komplexnější
+		- U [[OSPF Areas & LSAs#OSPF Path Selection|OSPF]] ještě hraje roli *Forwarding Cost*
+3. Po vytvoření LRIB, proces pošle svou představu o RIB do GRIB (*Global RIB*, běžná RIB)
+	- U některých protokolů zde dochází k porovnávání cest nad procesem
+		- Například OSPF, pokud máme 2 procesy a oba mají stejnou cestu (stejná metrika, typ a síť)
+			- OSPF pošle na zařazení do RIB cestu, která pochází z procesu s nižším *Process ID*
+				- Pokud i *Process ID* je stejné, tak se pošlou obě cesty
+				- Stejně to funguje i u [[EIGRP]]
+4. Následně IOS rozhodne o zařazení cest z návrhů routing protokolů a to na základě AD
+	- Pokud existuje více cest se stejným AD, tak se zabudují všechny (po maximální počet cest, 32)
+5. Na základě takto vytvořené RIB se vytváří [[CEF#FIB|FIB]]
+6. Z FIB dochází k forwardingu, vždy se pakety posílají na nejbližší síťovou shodu
+	- Pokud máme paket do sítě `10.0.5.0` a máme 2 cesty:
+		- `10.0.0.0/8`
+		- `10.0.0.0/16`
+	- Vždy se použije ta  s nejmenší maskou (`10.0.0.0/16`)
+	- Samotný forwarding se řídí pouze tímto, pokud nejsou specifická pravidla typu [[PBR]], nezáleží na AD cesty ani její metrice nebo typu
+	
 
 # Dělení protokolů
 ---
@@ -63,7 +96,7 @@ Při použití *Point-to-point* (P2P) seriového spoje není potřeba pro [[CEF#
 Z hlediska forwardovací logiky se pak tato cesta bude chovat stejně, jako přímo připojená síť, díky čemuž se zjednodušuje forwardovací proces.
 
 ```
-R1(config)i#p route 10.0.0.4 255.255.255.252 10.0.0.2
+R1(config)#ip route 10.0.0.4 255.255.255.252 10.0.0.2
 ```
 
 ```R
@@ -172,7 +205,7 @@ R1(config)#ip route 10.0.0.4 255.255.255.252 null0
 ## IGP - Interior Gateway Protocol
 
 Jedná se o routing uvnitř AS (Autonomního systému), souboru sítí.
-Routovací protokoli jsou tomu uspůsobeny
+Routovací protokoli jsou tomu uzpůsobeny
 
 ### Distance-Vector
 
@@ -190,15 +223,15 @@ Routovací protokoli jsou tomu uspůsobeny
 - Routery udržují komplexní mapu topologie vytvořenou pomocí LSA
 	- Místo posílání připojených sítí, ze kterých příjemce vyhodnotí odesílatele jako next-hop, link-state protokoly posílají objekty s atributy
 	- Nejčastější atribut je router, který má atributy v podobě interfaců a připojených sítí, díky tomu se může vypočítat mnohem komplexnější a kvalitnější topologie
-	- Objekty ale mohou být i celé AS, mlutiaccess sítě nebo border routery
+	- Objekty ale mohou být i celé AS, multiaccess sítě nebo border routery
 	- Router, respektive zástupce objektu, pak tyto informace přeposílá	
 - Vyměňují si Link State Advertisements - LSA, ta jsou vyvolána nějakou událostí v síti, také Link State Packet - LSP nebo Link State PDU
 - Sousedům zasílá Hello packet, ve kterém zasílá informace o sobě
 - Rychle reaguje na změnu topologie, ale spotřebovává hodně propustnosti, zejména ze začátku, a zdrojů routeru
-- Metrika je komplexně vypočítána pomocí Dijikstrova algoritmu, shortest path first - SFP
+- Cesta je komplexně vypočítána pomocí Dijikstrova algoritmu, shortest path first - SFP
 - Pro zlepšení vlastností se rozdělují sítě na menší oblasti, hraniční routery posílají sumarizaci sítě, využívají multicast a čísluje LSA
 - [[OSPF]]
-- [[IS-IS]]
+- [[Routing/Routing Protocols/IS-IS/IS-IS]]
 
 ## EGP - Exterior Gateway Protocol
 
@@ -211,17 +244,17 @@ Hlavní účel těchto path elements je předcházení smyčce, router nepřidá
 
 # Srovnání protokolů
 
-||[[RIP]]|[[EIGRP]]|[[OSPF]]|[[IS-IS]]|[[BGP]]|
+||[[RIP]]|[[EIGRP]]|[[OSPF]]|[[Routing/Routing Protocols/IS-IS/IS-IS]]|[[BGP]]|
 |:-:|:------:|:---------:|:---------:|:--------:|:--------:|
 |**Typ**|Distance-Vector|Distance-Vector|Link-State|Link-State|Path-Vector|
 |**Class**|Classful/Classless|Classless|Classless|Classless|Classless|Classless|
 |**Metrika**|Počet hopů|Delay, BW, Reliability, Load, MTU|100Mb/BW|Ruční|Weight, Local_Pref, Originate, AS_Path, MED|
 |**Algoritmus**|Bellman-Ford|DUAL|SPF|SPF|Best Path|
 |**Hello pakety**|Nemá|5s|10s|10s|60s|
-|**Komunikace**|[[UDP]]:520|IP:88|IP:98|[[IS-IS]]|[[TCP]]:179|
+|**Komunikace**|[[UDP]]:520|IP:88|IP:98|[[Routing/Routing Protocols/IS-IS/IS-IS]]|[[TCP]]:179|
 |**Tabulky**|RIB|RIB, Topology, Neighbour|RIB, Topology, Neighbour, LSA|LSA|Atributy, Topology|
 |**IPv6**|RIPng|IPv6 EIGRP|OSPFv3|Podporuje|mBGP|
-|**Sítě**|/|BMA, NBMA, Pt-Mpt|Pt-Pt, BM, NBMA, Pt-Mpt, Virtual link|/|/|
+|**Sítě**|/|BMA, NBMA, Pt-Mpt|Pt-Pt, BM, NBMA, Pt-Mpt, Virtual link|P-t-P, Broadcast|/|
 
 
 # Load-Balancing
@@ -231,7 +264,7 @@ Hlavní účel těchto path elements je předcházení smyčce, router nepřidá
 
 *ECMP*
 
-V případě, že protokol podporující ECMP ([[OSPF]], [[RIP]], [[IS-IS]], [[EIGRP]]) dostane více stejných cest do jedné sétě, nainstaluje je všechny do RIB a router mezi nimi load-sharuje na základě [[CEF#Load-Sharing]].
+V případě, že protokol podporující ECMP ([[OSPF]], [[RIP]], [[Routing/Routing Protocols/IS-IS/IS-IS]], [[EIGRP]]) dostane více stejných cest do jedné sétě, nainstaluje je všechny do RIB a router mezi nimi load-sharuje na základě [[CEF#Load-Sharing]].
 
 ## Unequal-Cost Load Balancing
 

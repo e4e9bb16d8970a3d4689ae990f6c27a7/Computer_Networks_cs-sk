@@ -73,6 +73,8 @@ R(config)#interface <IF>     \\ Přepnutí se na hraniční interface
 R(config-if)#ip summary-address eigrp <ADDR/PREFIX>     \\ Specifikace sítě, kterou bude posílat
 ```
 
+AD umožňuje určit AD cesty do `Null0` interface, která se vytváří na lokálním zařízení, není přeposílána jako vlastnost cesty.
+
 ### leak-map
 
 Toto je nástroj, který umožňuje, i přes sumarizaci, sdílet konkrétně vybrané sítě.

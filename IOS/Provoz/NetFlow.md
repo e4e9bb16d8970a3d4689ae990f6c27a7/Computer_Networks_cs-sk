@@ -3,7 +3,7 @@
 
 Jedná se o Cisco technologii, která umožňuje sledovat konkrétní provoz na síti, aby na něj adminitrátor mohl reagovat.
 Tento nástroj je v Cisco zařízeních již dlouhou dobu a nachází se v několika hlavních verzích: 1, 5, 9.
-Následně Cisco tento nástroj přejmenovalo na *Cisco Flexible NetFlow*, nejedná se pouze o změnu jména, ale i funkce, která je popsaná v [[#Flexible NetFlow]].
+Následně Cisco tento nástroj přejmenovalo na *Cisco Flexible NetFlow*, nejedná se pouze o změnu jména, ale i funkce, která je popsaná v [[#Flexible NetFlow FNF]].
 Netflow může být velkou zátěží na systémové prostředky, zejména na operační pamět!
 
 NetFlow vytváří statistiky na základě *flows* v síti, jednosměrném provozu, který má společné rysy:

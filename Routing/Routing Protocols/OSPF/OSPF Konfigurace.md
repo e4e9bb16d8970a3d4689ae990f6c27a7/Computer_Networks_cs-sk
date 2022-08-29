@@ -10,6 +10,9 @@ R(config-router)#router-id <IP>     \\ Nastavení RID, volitelné, nutno nastavi
 R(config-router)#network <IP> <WC_MASK> area <ARN>     \\ Zapnutí interfaců v určité arei
 ```
 
+> Process ID je sice lokálně signifikatní, ale hraje roli ve výběru cesty v případě, že jsou 2 shodné:
+	>> Pokud máme 2 procesy na jednom routeru a z obou nám přichází stejná cesta, typicky defaultní, pak se vybere ta z procesu s nižším ID.
+
 ```
 R#show ip protocols     \\ Zobrazení stavu routovacích protokolů
 R#show ip ospf neighbor     \\ Zobrazení sousedů a jejich stavů
@@ -326,6 +329,13 @@ R(config-router)#area <NUMBER> range <IP> <MASK> [advertise|cost|not-advertise] 
 	- Tento příkaz nám umožní nastavit specifickou metriku pro danou síť, místo té defaultní
 - **not-advertise**
 	- Zde je nástroj pro filtraci, tento příkaz blokuje rozesílání dané sítě
+
+### ASBR
+
+V případě ASBR existuje jiný příkaz, který umožňuje sumarizovat externí cesty:
+```
+R(config-router)#summary-address <ADDR> <MASK>
+```
 
 ## Funkce
 ---
